@@ -9,7 +9,7 @@ crawler:
       name: "Local zh-HK Timeline"
       language: "zh-hk"
       # Local file path (relative to worker directory)
-      file: "../tpwfc-data/source/zh-HK/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      file: "../data/source/zh-HK/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
       enabled: true
       # URL sources are kept as backup (commented out for local mode)
       # url: "https://raw.githubusercontent.com/Hong-Kong-Emergency-Coordination-Hub/Hong-Kong-Fire-Documentary/refs/heads/main/content/timeline/fire-linear-timeline-zh.md"
@@ -21,7 +21,7 @@ crawler:
       fire_name: "Main Hong Kong Fire Timeline"
       name: "Local en-US Timeline"
       language: "en-us"
-      file: "../tpwfc-data/source/en-US/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      file: "../data/source/en-US/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
       enabled: true
 
     # MAIN FIRE INCIDENT - Simplified Chinese (when available)
@@ -29,7 +29,7 @@ crawler:
       fire_name: "Main Hong Kong Fire Timeline"
       name: "Local zh-CN Timeline"
       language: "zh-cn"
-      file: "../tpwfc-data/source/zh-CN/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      file: "../data/source/zh-CN/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
       enabled: true
 
     # SECONDARY INCIDENTS - Placeholders for demonstration
@@ -37,14 +37,14 @@ crawler:
     #   fire_name: "Tai Po Hong Fu Yuan Fire - Government Law Enforcement Timeline"
     #   name: "DAPUEC Timeline"
     #   language: "zh-hk"
-    #   file: "../tpwfc-data/source/zh-HK/dapuec/timeline.md"
+    #   file: "../data/source/zh-HK/dapuec/timeline.md"
     #   enabled: false
 
     # - fire_id: "hongfu_owner"
     #   fire_name: "Hong Fu Yuan - Owner Corporation & Major Renovation Dispute"
     #   name: "Hong Fu Owner Timeline"
     #   language: "zh-hk"
-    #   file: "../tpwfc-data/source/zh-HK/hongfu_owner/timeline.md"
+    #   file: "../data/source/zh-HK/hongfu_owner/timeline.md"
     #   enabled: false
 
   # Retry policy for each URL attempt
