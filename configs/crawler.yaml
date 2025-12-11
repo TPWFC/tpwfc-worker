@@ -10,11 +10,20 @@ crawler:
       language: "zh-hk"
       # Local file path (relative to worker directory)
       file: "../data/source/zh-HK/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      # Primary URL source
+      url: "https://raw.githubusercontent.com/TPWFC/tpwfc-data/refs/heads/main/source/zh-HK/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
       enabled: true
-      # URL sources are kept as backup (commented out for local mode)
-      # url: "https://raw.githubusercontent.com/Hong-Kong-Emergency-Coordination-Hub/Hong-Kong-Fire-Documentary/refs/heads/main/content/timeline/fire-linear-timeline-zh.md"
       # backup_urls:
-      #   - "https://raw.githubusercontent.com/lst97/TPWFC-Fire-Documentary/refs/heads/main/content/timeline/fire-linear-timeline-zh.md"
+      #   - "..."
+
+    # DETAILED TIMELINE CASE STUDY
+    - fire_id: "wang_fuk_court_fire_2025_detailed"
+      fire_name: "Detailed Case Study"
+      name: "Detailed Timeline Case Study"
+      language: "zh-hk"
+      file: "../data/source/zh-HK/fire/WANG_FUK_COURT_FIRE_2025/case-study/detailed_timeline.md"
+      url: "https://raw.githubusercontent.com/TPWFC/tpwfc-data/refs/heads/main/source/zh-HK/fire/WANG_FUK_COURT_FIRE_2025/case-study/detailed_timeline.md"
+      enabled: true
 
     # MAIN FIRE INCIDENT - English (when available)
     - fire_id: "auto_detect"
@@ -22,6 +31,7 @@ crawler:
       name: "Local en-US Timeline"
       language: "en-us"
       file: "../data/source/en-US/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      url: "https://raw.githubusercontent.com/TPWFC/tpwfc-data/refs/heads/main/source/en-US/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
       enabled: true
 
     # MAIN FIRE INCIDENT - Simplified Chinese (when available)
@@ -30,6 +40,7 @@ crawler:
       name: "Local zh-CN Timeline"
       language: "zh-cn"
       file: "../data/source/zh-CN/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      url: "https://raw.githubusercontent.com/TPWFC/tpwfc-data/refs/heads/main/source/zh-CN/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
       enabled: true
 
     # SECONDARY INCIDENTS - Placeholders for demonstration

@@ -136,6 +136,25 @@ func main() {
 }
 
 func processFile(path string, write bool, cfg *config.Config) (bool, error) {
+	// Check if we should skip processing entirely (if source has URL)
+	if cfg != nil {
+		absPath, absErr := filepath.Abs(path)
+		if absErr == nil {
+			for _, source := range cfg.Crawler.Sources {
+				if source.URL != "" && source.File != "" {
+					// Check if this file matches the source file
+					// We try to match absolute paths
+					sourceAbs, sErr := filepath.Abs(source.File)
+					if sErr == nil && sourceAbs == absPath {
+						// Skip entirely for remote-backed sources
+						// The local file is just a fallback/mirror and shouldn't be formatted/signed locally
+						return false, nil
+					}
+				}
+			}
+		}
+	}
+
 	content, err := os.ReadFile(path)
 	if err != nil {
 		return false, err

@@ -88,12 +88,19 @@ func CalculateHash(content string) string {
 
 // Sign appends or updates the metadata block with a fresh hash and timestamp.
 func Sign(content string, validated bool) string {
-	_, clean := Extract(content)
+	oldMeta, clean := Extract(content)
 
 	// Calculate hash of the clean content
 	hash := CalculateHash(clean)
 
 	now := time.Now().UTC().Format(time.RFC3339)
+
+	// If hash is unchanged, preserve the old timestamp
+	if oldMeta != nil && oldMeta.Hash == hash {
+		if !oldMeta.LastModify.IsZero() {
+			now = oldMeta.LastModify.UTC().Format(time.RFC3339)
+		}
+	}
 
 	valStr := "FALSE"
 	if validated {

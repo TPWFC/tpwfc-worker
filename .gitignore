@@ -43,3 +43,5 @@ build/
 
 # Docker
 docker-compose.override.yml
+
+.opencode
