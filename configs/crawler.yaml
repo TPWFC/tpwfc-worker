@@ -1,0 +1,102 @@
+# Test configuration for multiple fire incidents
+# This demonstrates how the system handles multiple fires
+
+crawler:
+  sources:
+    # MAIN FIRE INCIDENT - Hong Kong Chinese (Local file)
+    - fire_id: "auto_detect"
+      fire_name: "Main Hong Kong Fire Timeline"
+      name: "Local zh-HK Timeline"
+      language: "zh-hk"
+      # Local file path (relative to worker directory)
+      file: "../tpwfc-data/source/zh-HK/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      enabled: true
+      # URL sources are kept as backup (commented out for local mode)
+      # url: "https://raw.githubusercontent.com/Hong-Kong-Emergency-Coordination-Hub/Hong-Kong-Fire-Documentary/refs/heads/main/content/timeline/fire-linear-timeline-zh.md"
+      # backup_urls:
+      #   - "https://raw.githubusercontent.com/lst97/TPWFC-Fire-Documentary/refs/heads/main/content/timeline/fire-linear-timeline-zh.md"
+
+    # MAIN FIRE INCIDENT - English (when available)
+    - fire_id: "auto_detect"
+      fire_name: "Main Hong Kong Fire Timeline"
+      name: "Local en-US Timeline"
+      language: "en-us"
+      file: "../tpwfc-data/source/en-US/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      enabled: true
+
+    # MAIN FIRE INCIDENT - Simplified Chinese (when available)
+    - fire_id: "auto_detect"
+      fire_name: "Main Hong Kong Fire Timeline"
+      name: "Local zh-CN Timeline"
+      language: "zh-cn"
+      file: "../tpwfc-data/source/zh-CN/fire/WANG_FUK_COURT_FIRE_2025/timeline.md"
+      enabled: true
+
+    # SECONDARY INCIDENTS - Placeholders for demonstration
+    # - fire_id: "dapuec"
+    #   fire_name: "Tai Po Hong Fu Yuan Fire - Government Law Enforcement Timeline"
+    #   name: "DAPUEC Timeline"
+    #   language: "zh-hk"
+    #   file: "../tpwfc-data/source/zh-HK/dapuec/timeline.md"
+    #   enabled: false
+
+    # - fire_id: "hongfu_owner"
+    #   fire_name: "Hong Fu Yuan - Owner Corporation & Major Renovation Dispute"
+    #   name: "Hong Fu Owner Timeline"
+    #   language: "zh-hk"
+    #   file: "../tpwfc-data/source/zh-HK/hongfu_owner/timeline.md"
+    #   enabled: false
+
+  # Retry policy for each URL attempt
+  retry:
+    max_attempts: 3
+    initial_delay_ms: 500
+    max_delay_ms: 30000
+    backoff_multiplier: 2.0
+    timeout_sec: 30
+
+  # Output configuration
+  output:
+    base_path: "./data/fire"
+    format: "json"
+    structure: "fire_language"
+    pretty_print: true
+    create_backup: true
+
+  # Validation configuration
+  validation:
+    validate_table_format: true
+    required_fields:
+      - date
+      - time
+      - description
+    patterns:
+      date: '^\d{4}-\d{2}-\d{2}$'
+      time: '^(\d{2}:\d{2}.*|[A-Z_]+)$'
+      description: ".+"
+    min_events: 10
+    max_events: 500
+    validate_casualties: true
+    min_casualties_pattern: "(DEAD|INJURED|MISSING|STATUS_NONE):.*"
+
+  # Logging configuration
+  logging:
+    level: "info"
+    show_progress: true
+    sample_events: 3
+    detailed_validation: true
+
+# Feature flags
+features:
+  enable_caching: false
+  enable_normalization_preview: true
+  strict_validation: false
+  enable_markdown_formatter: true
+
+# Advanced settings
+advanced:
+  max_memory_mb: 512
+  concurrent_url_attempts: false
+  continue_on_validation_errors: true
+  save_failed_rows: true
+  buffer_size_kb: 1024

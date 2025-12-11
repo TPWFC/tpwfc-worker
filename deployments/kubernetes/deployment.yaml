@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tpwfc-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tpwfc-worker
+  template:
+    metadata:
+      labels:
+        app: tpwfc-worker
+    spec:
+      containers:
+        - name: worker
+          image: tpwfc-worker:latest
+          env:
+            - name: CRAWLER_TARGET_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: worker-config
+                  key: crawler-url
+            - name: PAYLOAD_CMS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: worker-config
+                  key: payload-url
+            - name: PAYLOAD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: worker-secrets
+                  key: api-key
+            # TODO: Add resource limits and requests
+            # TODO: Add health checks

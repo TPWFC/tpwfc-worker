@@ -1,0 +1,156 @@
+version: "2"
+
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+    - contextcheck
+    - decorder
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - forcetypeassert
+    - ginkgolinter
+    - gocheckcompilerdirectives
+    - gochecknoinits
+    - gochecksumtype
+    - goconst
+    - gocritic
+    - godot
+    - err113
+    - goheader
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - govet
+    - grouper
+    - importas
+    - ineffassign
+    - interfacebloat
+    - ireturn
+    - loggercheck
+    - maintidx
+    - makezero
+    - mirror
+    - misspell
+    - nakedret
+    - nilerr
+    - nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - predeclared
+    - promlinter
+    - reassign
+    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
+    - staticcheck
+    - tagalign
+    - testableexamples
+    - testifylint
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - wastedassign
+    - whitespace
+    - zerologlint
+  disable:
+    - gocyclo        # High complexity is acceptable for parsing logic
+    - gosec          # File permissions warnings are intentional
+    - gosmopolitan   # Chinese characters in parser are intentional
+    - godox          # TODO comments are acceptable
+    - tagliatelle    # YAML snake_case convention is standard
+    - nestif         # Complex nested logic is acceptable for parsing
+    - wrapcheck      # Not wrapping all external errors is acceptable
+    - nilnil         # Returning nil, nil in some cases is acceptable
+    - noctx          # Context usage is not always necessary
+    - musttag        # Struct tag enforcement is too strict
+    - prealloc       # Pre-allocation optimization is not critical
+    - unparam        # Unused parameters are intentional for interface compatibility
+    - maintidx       # Complexity metrics are too strict for CLI tools
+
+  settings:
+    govet:
+      enable:
+        - shadow
+    dupl:
+      threshold: 100
+    goconst:
+      min-len: 2
+      min-occurrences: 3
+    misspell:
+      locale: US
+    revive:
+      rules:
+        - name: exported
+          severity: warning
+        - name: package-comments
+          severity: warning
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+      disabled-checks:
+        - dupImport
+        - ifElseChain
+        - octalLiteral
+        - whyNoLint
+        - wrapperFunc
+        - rangeValCopy         # Copying small structs is often more efficient
+        - hugeParam            # Passing by value is acceptable in some cases
+        - paramTypeCombine     # Explicit parameter types improve readability
+        - unnamedResult        # Named results not always necessary
+        - deferInLoop          # Valid pattern for resource cleanup in retries
+        - importShadow         # Intentional shadowing in test files
+        - tooManyResultsChecker # Multiple return values needed for metrics
+        - elseif               # Fixed manually where applicable
+    funlen:
+      lines: 150
+      statements: 80
+    whitespace:
+      multi-if: false
+      multi-func: false
+
+  exclusions:
+    rules:
+      - path: '_test\.go$'
+        linters:
+          - gocyclo
+          - errcheck
+          - dupl
+          - gosec
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    gofmt:
+      simplify: true
+    goimports:
+      local-prefixes:
+        - tpwfc
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

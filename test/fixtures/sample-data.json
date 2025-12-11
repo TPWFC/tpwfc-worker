@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "title": "Sample Article",
+    "content": "This is a sample article for testing",
+    "author": "John Doe",
+    "source": "example.com",
+    "url": "https://example.com/article1",
+    "createdAt": "2025-12-03T00:00:00Z",
+    "updatedAt": "2025-12-03T00:00:00Z"
+  }
+]

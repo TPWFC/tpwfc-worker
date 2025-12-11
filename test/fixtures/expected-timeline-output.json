@@ -1,0 +1,121 @@
+{
+  "timeline": [
+    {
+      "id": "2025-11-26-14:50",
+      "date": "2025-11-26",
+      "time": "14:50",
+      "dateTime": "2025-11-26T14:50:00",
+      "description": "目擊者聽巨響，發現宏昌閣一樓棚架起火，立即報警",
+      "casualties": {
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0,
+        "status": "-",
+        "raw": "-"
+      },
+      "sources": [
+        {
+          "name": "東方日報",
+          "url": "https://www.orientalsunday.hk/"
+        }
+      ],
+      "category": "INITIAL_REPORT"
+    },
+    {
+      "id": "2025-11-26-14:51",
+      "date": "2025-11-26",
+      "time": "14:51",
+      "dateTime": "2025-11-26T14:51:00",
+      "description": "消防正式接報，火勢迅速蔓延外牆防護網",
+      "casualties": {
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0,
+        "status": "-",
+        "raw": "-"
+      },
+      "sources": [
+        {
+          "name": "維基百科",
+          "url": "https://zh.wikipedia.org/zh-hant/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB"
+        }
+      ],
+      "category": "FIRE_ESCALATION"
+    },
+    {
+      "id": "2025-11-26-15:01",
+      "date": "2025-11-26",
+      "time": "15:01-15:02",
+      "dateTime": "2025-11-26T15:01:00",
+      "description": "首批消防員到場，火擴至4樓竄升，直接定三級火警",
+      "casualties": {
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0,
+        "status": "-",
+        "raw": "-"
+      },
+      "sources": [
+        {
+          "name": "SBS時間線",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        },
+        {
+          "name": "英文維基",
+          "url": "https://en.wikipedia.org/wiki/Wang_Fuk_Court_fire"
+        }
+      ],
+      "category": "FIRE_ESCALATION"
+    },
+    {
+      "id": "2025-11-28-06:00",
+      "date": "2025-11-28",
+      "time": "06:00",
+      "dateTime": "2025-11-28T06:00:00",
+      "description": "包括1消防員殉職",
+      "casualties": {
+        "deaths": 94,
+        "injured": 76,
+        "missing": 0,
+        "status": "94死76傷",
+        "raw": "94死76傷"
+      },
+      "sources": [
+        {
+          "name": "SBS時間線",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "category": "CASUALTY_UPDATE"
+    },
+    {
+      "id": "2025-11-28-15:00",
+      "date": "2025-11-28",
+      "time": "15:00",
+      "dateTime": "2025-11-28T15:00:00",
+      "description": "最終統計",
+      "casualties": {
+        "deaths": 128,
+        "injured": 78,
+        "missing": 200,
+        "status": "128死78傷，200失蹤",
+        "raw": "128死78傷,200失蹤"
+      },
+      "sources": [
+        {
+          "name": "維基百科",
+          "url": "https://zh.wikipedia.org/zh-hant/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB"
+        }
+      ],
+      "category": "CASUALTY_UPDATE"
+    }
+  ],
+  "summary": {
+    "startDate": "2025-11-26",
+    "endDate": "2025-12-01",
+    "totalEvents": 150,
+    "totalDeaths": 128,
+    "totalInjured": 78,
+    "totalMissing": 200
+  }
+}
