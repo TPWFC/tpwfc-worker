@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"tpwfc/internal/config"
@@ -119,6 +120,9 @@ func main() {
 
 			// Check if this is a local file source
 			if urlManager.IsCurrentSourceLocal() {
+				// Ensure local data is up to date
+				gitPull(source)
+
 				fmt.Printf("⏳ Reading local file: %s\n", source)
 
 				content, fileSize, duration, readErr := scraper.ReadLocalFileWithMetrics(source)
@@ -141,7 +145,7 @@ func main() {
 			}
 
 			// Remote URL source
-			fmt.Printf("⏳ Fetching (Attempt %d): %s\n", attemptNum, sourceName)
+			fmt.Printf("⏳ Fetching (Attempt %d): %s\n   Remote: %s\n", attemptNum, sourceName, source)
 
 			content, statusCode, duration, fetchErr := scraper.ScrapeWithMetrics(source)
 			urlManager.RecordAttempt(source, fetchErr == nil, fetchErr, statusCode, duration)
@@ -152,7 +156,7 @@ func main() {
 				language = lang
 				fetchSuccess = true
 
-				fmt.Printf("✅ Successfully fetched from %s (%.2fs)\n", sourceName, duration.Seconds())
+				fmt.Printf("✅ Successfully fetched [Remote] from %s (%.2fs)\n", sourceName, duration.Seconds())
 
 				break
 			}
@@ -493,4 +497,41 @@ func printUsage() {
 	fmt.Println("  ./bin/crawler -url https://raw.githubusercontent.com/... -output output.json")
 	fmt.Println("  ./bin/crawler -file data/source/zh-HK/fire/WANG_FUK_COURT_FIRE_2025/timeline.md -output data/fire/WANG_FUK_COURT_FIRE_2025/zh-hk/timeline.json")
 	fmt.Println("  ./bin/crawler -config configs/crawler.yaml -validate")
+}
+
+// gitPull executes git pull in the directory of the given file path.
+func gitPull(filePath string) {
+	// Resolve absolute path to be safe, or use relative if that's how we run
+	dir := filepath.Dir(filePath)
+
+	// Check if directory exists
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		// If directory doesn't exist, we can't pull.
+		// It might be created later or path is wrong.
+		return
+	}
+
+	fmt.Printf("🔄 Checking for git updates in %s...\n", dir)
+
+	// Create command
+	cmd := exec.Command("git", "pull")
+	cmd.Dir = dir
+
+	// Run command
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		// Log warning but don't fail the whole process - local file might still be readable
+		fmt.Printf("⚠️  Git pull warning: %v\n", err)
+	} else {
+		// Only print output if verbose or interesting; git pull usually prints "Already up to date."
+		// We'll print a summary.
+		outputStr := string(output)
+		if outputStr != "" {
+			// Trim newline
+			if outputStr[len(outputStr)-1] == '\n' {
+				outputStr = outputStr[:len(outputStr)-1]
+			}
+			fmt.Printf("📄 Git output: %s\n", outputStr)
+		}
+	}
 }

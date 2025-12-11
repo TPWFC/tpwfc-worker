@@ -23,6 +23,8 @@ type URLManager struct {
 	sources          []config.SourceConfig
 	currentSourceIdx int
 	currentURLIdx    int
+	// isFallbackMode indicates if we are currently falling back to local file for the current source
+	isFallbackMode bool
 }
 
 // AttempResult records the result of a URL fetch attempt.
@@ -54,6 +56,7 @@ func NewURLManager(cfg *config.Config) *URLManager {
 		sourceAttempts:   make(map[string]int),
 		currentSourceIdx: 0,
 		currentURLIdx:    0,
+		isFallbackMode:   false,
 	}
 }
 
@@ -63,81 +66,100 @@ func (um *URLManager) NextURL() (string, string, string, string, int, error) {
 		return "", "", "", "", 0, ErrNoSourcesAvailable
 	}
 
+	// Check if current index is out of bounds
+	if um.currentSourceIdx >= len(um.sources) {
+		return "", "", "", "", 0, fmt.Errorf("%w: %d", ErrAllSourcesExhausted, len(um.sources))
+	}
+
 	source := um.sources[um.currentSourceIdx]
 	sourceKey := source.FireID + ":" + source.Language
-	attemptNum := um.sourceAttempts[sourceKey] + 1
 
-	// For local files, only one attempt is needed (no retry)
-	if source.IsLocalFile() {
+	// If in fallback mode, we are trying the local file
+	if um.isFallbackMode {
+		attemptNum := um.sourceAttempts[sourceKey] + 1
+
+		// We only try the local file once in fallback mode
 		if attemptNum > 1 {
-			// Move to next source
-			um.currentSourceIdx++
-			um.currentURLIdx = 0
-			um.sourceAttempts[sourceKey] = 0
-
-			if um.currentSourceIdx >= len(um.sources) {
-				return "", "", "", "", 0, fmt.Errorf("%w: %d", ErrAllSourcesExhausted, len(um.sources))
-			}
-
-			source = um.sources[um.currentSourceIdx]
-			sourceKey = source.FireID + ":" + source.Language
-
-			// Check if next source is also local file
-			if source.IsLocalFile() {
-				um.sourceAttempts[sourceKey] = 1
-
-				return source.File, source.Name, source.FireID, source.Language, 1, nil
-			}
+			// Fallback failed or completed, move to next source
+			return um.moveToNextSource()
 		}
 
-		um.sourceAttempts[sourceKey] = 1
-
+		um.sourceAttempts[sourceKey] = attemptNum
 		return source.File, source.Name, source.FireID, source.Language, 1, nil
 	}
 
-	// Check if we've exhausted retry attempts for this source
-	if attemptNum > um.retryPolicy.MaxAttempts {
-		// Move to next source
-		um.currentSourceIdx++
-		um.currentURLIdx = 0
-		um.sourceAttempts[sourceKey] = 0
+	// Calculate attempt number for current phase (URL phase)
+	attemptNum := um.sourceAttempts[sourceKey] + 1
 
-		if um.currentSourceIdx >= len(um.sources) {
-			return "", "", "", "", 0, fmt.Errorf("%w: %d", ErrAllSourcesExhausted, len(um.sources))
-		}
-
-		source = um.sources[um.currentSourceIdx]
-		sourceKey = source.FireID + ":" + source.Language
-
-		// Check if next source is local file
-		if source.IsLocalFile() {
-			um.sourceAttempts[sourceKey] = 1
-
-			return source.File, source.Name, source.FireID, source.Language, 1, nil
+	// For pure local files (no URL configured), treat as special case
+	if source.URL == "" && source.IsLocalFile() {
+		if attemptNum > 1 {
+			return um.moveToNextSource()
 		}
 
 		um.sourceAttempts[sourceKey] = 1
+		// For pure local files, we set fallback mode effectively to true for IsCurrentSourceLocal logic
+		// or we can handle it by returning true in IsCurrentSourceLocal if URL is empty
+		return source.File, source.Name, source.FireID, source.Language, 1, nil
+	}
 
-		return source.URL, source.Name, source.FireID, source.Language, 1, nil
+	// Check if we've exhausted retry attempts for the URL
+	if attemptNum > um.retryPolicy.MaxAttempts {
+		// Retries exhausted. Check if we can fallback to local file
+		if source.IsLocalFile() {
+			// Switch to fallback mode
+			um.isFallbackMode = true
+			um.sourceAttempts[sourceKey] = 0 // Reset attempts for fallback phase
+
+			// Recursively call to get the local file
+			return um.NextURL()
+		}
+
+		// No fallback available, move to next source
+		return um.moveToNextSource()
 	}
 
 	// Try next URL variant (primary or backup)
 	allURLs := source.GetAllURLs()
 	if um.currentURLIdx >= len(allURLs) {
 		um.currentURLIdx = 0
-		um.sourceAttempts[sourceKey] = attemptNum
+		// If we wrapped around URLs, that counts as a full "attempt" cycle in some logics,
+		// but here we count strict attempts.
+		// We'll keep using the same attempt count logic as before.
 	}
 
 	url := allURLs[um.currentURLIdx]
-	um.currentURLIdx++
+	um.currentURLIdx++ // Rotate through URLs for next call
+
+	um.sourceAttempts[sourceKey] = attemptNum
 
 	return url, source.Name, source.FireID, source.Language, attemptNum, nil
+}
+
+// moveToNextSource advances to the next source and resets state.
+func (um *URLManager) moveToNextSource() (string, string, string, string, int, error) {
+	um.currentSourceIdx++
+	um.currentURLIdx = 0
+	um.isFallbackMode = false
+
+	// Clear attempt counts for the new source (optional, but good for cleanliness)
+	// We don't strictly need to clear sourceAttempts[newKey] if we assume it starts at 0,
+	// but keeping the map clean is okay. The map is persistent though.
+
+	if um.currentSourceIdx >= len(um.sources) {
+		return "", "", "", "", 0, fmt.Errorf("%w: %d", ErrAllSourcesExhausted, len(um.sources))
+	}
+
+	// Recursively call NextURL for the new source
+	return um.NextURL()
 }
 
 // IsCurrentSourceLocal returns true if the current source is a local file.
 func (um *URLManager) IsCurrentSourceLocal() bool {
 	if um.currentSourceIdx < len(um.sources) {
-		return um.sources[um.currentSourceIdx].IsLocalFile()
+		source := um.sources[um.currentSourceIdx]
+		// It's local if we are in fallback mode OR if there is no URL (pure local source)
+		return um.isFallbackMode || source.URL == ""
 	}
 
 	return false
@@ -301,6 +323,7 @@ func (um *URLManager) LogAttemptSummary(l *logger.Logger) {
 func (um *URLManager) Reset() {
 	um.currentSourceIdx = 0
 	um.currentURLIdx = 0
+	um.isFallbackMode = false
 	um.sourceAttempts = make(map[string]int)
 	um.attemptLog = make(map[string][]AttempResult)
 }
