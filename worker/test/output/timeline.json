@@ -1,0 +1,983 @@
+{
+  "basicInfo": {
+    "incidentId": "WANG_FUK_COURT_FIRE_2025",
+    "incidentName": "大埔宏福苑五級火警",
+    "dateRange": "2025-11-26/2025-11-28",
+    "startDate": "2025-11-26",
+    "endDate": "2025-11-28",
+    "location": "大埔宏福苑宏昌閣",
+    "map": "https://www.google.com/maps/place/Wang+Fuk+Court+Block+E+Wang+Tai+House/@22.4466834,114.1752137,19.44z/data=!4m15!1m8!3m7!1s0x3404083c990ce3bd:0xfe83205d6a42e602!2sTai+Po,+Hong+Kong!3b1!8m2!3d22.4423218!4d114.1655064!16zL20vMDhndnFf!3m5!1s0x340408439a076c71:0xcea1da1d711a6010!8m2!3d22.4464379!4d114.1758669!16s%2Fg%2F1w8w7m8v?entry=ttu\u0026g_ep=EgoyMDI1MTIwMi4wIKXMDSoASAFQAw%3D%3D",
+    "disasterLevel": "LEVEL_5",
+    "sources": "[HK01](https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B),[SBS Australia](https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2)",
+    "duration": {
+      "raw": "01:19:27:00",
+      "days": 1,
+      "hours": 19,
+      "minutes": 27,
+      "seconds": 0
+    },
+    "affectedBuildings": 7
+  },
+  "fireCause": "外牆大型維修工程的棚架起火。調查發現，外牆圍封用的膠板及窗框周圍的發泡膠（聚苯乙烯）為高度易燃物料，火勢因此迅速蔓延。",
+  "keyStatistics": {
+    "fireLevels": "LEVEL_5",
+    "finalDeaths": "128",
+    "firefighterCasualties": "INJURED:12,DEAD:1",
+    "fireDuration": {
+      "raw": "01:19:27:00",
+      "days": 1,
+      "hours": 19,
+      "minutes": 27,
+      "seconds": 0
+    },
+    "firefightersDeployed": 1250,
+    "fireVehicles": 304,
+    "helpCases": 346,
+    "helpCasesProcessed": 296,
+    "affectedBuildings": 7,
+    "shelterUsers": 900,
+    "missingPersons": 279,
+    "unidentifiedBodies": 89
+  },
+  "metadata": {
+    "LastModify": "2025-12-11T10:18:25Z",
+    "Version": "",
+    "Hash": "880e9aa33230e8df38a9d3850868b4560e2a09748d66026fb6cbf6ac92ddad04",
+    "Validation": true
+  },
+  "notes": [
+    "標示單一來源名稱的事件表示只有該來源有報導",
+    "最終死亡人數在兩個來源間存在差異：HK01報導128死，SBS Australia報導94死",
+    "死傷狀況使用標準化代碼格式，便於機器解析",
+    "最終死亡人數為2025年11月28日下午3時的最新數據"
+  ],
+  "severity": "是次火警為香港60年來最嚴重的火災事故，造成逾百人死亡。消防處共接獲346宗求助個案，出動304架消防及救援車輛，派出逾1,250名消防人員參與救援。八座大廈中，有一座沒受波及，其餘七座不同程度受損。",
+  "sources": [
+    {
+      "id": "-------------",
+      "name": "-------------",
+      "title": "---------------------------------------------------------",
+      "url": "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+    },
+    {
+      "id": "HK01",
+      "name": "HK01",
+      "title": "宏福苑大火．時序-無情火燒7廈奪逾百命 逾43小時發生了何事？",
+      "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+    },
+    {
+      "id": "SBS_AUSTRALIA",
+      "name": "SBS Australia",
+      "title": "【即時更新】香港大埔五級火警時間線",
+      "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+    }
+  ],
+  "timeline": [
+    {
+      "id": "2025-11-26-14:51",
+      "date": "2025-11-26",
+      "time": "14:51",
+      "dateTime": "2025-11-26T14:51:00",
+      "description": "消防處接獲宏福苑宏昌閣發生火警",
+      "category": "INITIAL_REPORT",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hkfsd.gov.hk/eng/press/index.html"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-14:56",
+      "date": "2025-11-26",
+      "time": "14:56",
+      "dateTime": "2025-11-26T14:56:00",
+      "description": "消防員到達現場後，發現外圍搭建棚架已起火，並蔓延至室內及其他樓宇",
+      "category": "FIREFIGHTING",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-14:57",
+      "date": "2025-11-26",
+      "time": "14:57",
+      "dateTime": "2025-11-26T14:57:00",
+      "description": "火勢蔓延到4樓",
+      "category": "FIRE_ESCALATION",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-15:01",
+      "date": "2025-11-26",
+      "time": "15:01",
+      "dateTime": "2025-11-26T15:01:00",
+      "description": "37歲駐守沙田消防局的細搶救車消防隊員何偉豪到達現場參與救援",
+      "category": "FIREFIGHTING",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-15:02",
+      "date": "2025-11-26",
+      "time": "15:02",
+      "dateTime": "2025-11-26T15:02:00",
+      "description": "火警升為三級",
+      "category": "FIRE_ESCALATION",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        },
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-15:34",
+      "date": "2025-11-26",
+      "time": "15:34",
+      "dateTime": "2025-11-26T15:34:00",
+      "description": "火警升為四級。相若時間，消防隊員何偉豪失聯",
+      "category": "FIRE_ESCALATION",
+      "videoUrl": "https://www.youtube.com/watch?v=7lAxRUAMrVc\u0026t=0",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        },
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-16:01",
+      "date": "2025-11-26",
+      "time": "16:01",
+      "dateTime": "2025-11-26T16:01:00",
+      "description": "消防隊員何偉豪被發現在宏昌閣升降機對開一空地昏迷",
+      "category": "SEARCH_RECOVERY",
+      "videoUrl": "https://www.youtube.com/watch?v=7lAxRUAMrVc\u0026t=1620",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-16:45",
+      "date": "2025-11-26",
+      "time": "16:45",
+      "dateTime": "2025-11-26T16:45:00",
+      "description": "消防隊員何偉豪證實不治",
+      "category": "CASUALTY_UPDATE",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "FIREFIGHTER_DEAD:1",
+        "raw": "FIREFIGHTER_DEAD:1",
+        "deaths": 1,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-17:15",
+      "date": "2025-11-26",
+      "time": "17:15",
+      "dateTime": "2025-11-26T17:15:00",
+      "description": "官方資料指暫有4死，仍有多人報警求助指被困單位或天台",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=1001",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:4",
+        "raw": "DEAD:4",
+        "deaths": 4,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-18:22",
+      "date": "2025-11-26",
+      "time": "18:22",
+      "dateTime": "2025-11-26T18:22:00",
+      "description": "火警升為五級（最高級別）",
+      "category": "FIRE_ESCALATION",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=5023",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        },
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-19:00",
+      "date": "2025-11-26",
+      "time": "19:00",
+      "dateTime": "2025-11-26T19:00:00",
+      "description": "火警造成4死7傷",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=7310",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:4,INJURED:7",
+        "raw": "DEAD:4,INJURED:7",
+        "deaths": 4,
+        "injured": 7,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-19:30",
+      "date": "2025-11-26",
+      "time": "19:30",
+      "dateTime": "2025-11-26T19:30:00",
+      "description": "李家超於社交媒體發文，指已即時啟動「緊急事故監察及支援中心」",
+      "category": "RELIEF_ASSISTANCE",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=9079",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-20:15",
+      "date": "2025-11-26",
+      "time": "20:15",
+      "dateTime": "2025-11-26T20:15:00",
+      "description": "消防處：9人現場死亡，4人送院不治，累計13死",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=11817",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:13(ON_SITE:9,TRANSIT:4)",
+        "raw": "DEAD:13(ON_SITE:9,TRANSIT:4)",
+        "deaths": 13,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-21:30",
+      "date": "2025-11-26",
+      "time": "21:30",
+      "dateTime": "2025-11-26T21:30:00",
+      "description": "有約900人使用庇護中心",
+      "category": "RELIEF_ASSISTANCE",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=16306",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-26-23:00",
+      "date": "2025-11-26",
+      "time": "23:00",
+      "dateTime": "2025-11-26T23:00:00",
+      "description": "火警造成13死30傷, 李家超率眾官員到庇護中心探望災民後，再到威爾斯親王醫院慰問死者家屬及探望傷者",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=21697",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:13,INJURED:30",
+        "raw": "DEAD:13,INJURED:30",
+        "deaths": 13,
+        "injured": 30,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-00:00",
+      "date": "2025-11-27",
+      "time": "00:00",
+      "dateTime": "2025-11-27T00:00:00",
+      "description": "現場不斷有遺體被送上黑箱車，陸續有生還者獲救出",
+      "category": "SEARCH_RECOVERY",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=25303",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-00:01",
+      "date": "2025-11-27",
+      "time": "00:01",
+      "dateTime": "2025-11-27T00:01:00",
+      "description": "李家超聯同多名高官，到威爾斯親王醫院慰問死者家屬及探望傷者",
+      "category": "RELIEF_ASSISTANCE",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=25353",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-01:15",
+      "date": "2025-11-27",
+      "time": "01:15",
+      "dateTime": "2025-11-27T01:15:00",
+      "description": "李家超率眾官員交代火災，公布指火警造成36死，279人失聯",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/l9uE2IRZ4HM?t=29826",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:36,MISSING:279",
+        "raw": "DEAD:36,MISSING:279",
+        "deaths": 36,
+        "injured": 0,
+        "missing": 279
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-03:00",
+      "date": "2025-11-27",
+      "time": "03:00",
+      "dateTime": "2025-11-27T03:00:00",
+      "description": "保安局局長鄧炳強、保安局副局長卓孝業及消防處處長楊恩健等官員到火警現場视察",
+      "category": "OTHER",
+      "videoUrl": "https://youtu.be/igiO6GtnjcM?t=3505",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-03:36",
+      "date": "2025-11-27",
+      "time": "03:36",
+      "dateTime": "2025-11-27T03:36:00",
+      "description": "警方拘捕宏業建築工程2名董事及1名工程顧問涉嫌誤殺",
+      "category": "OTHER",
+      "videoUrl": "https://youtu.be/igiO6GtnjcM?t=5659",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-05:45",
+      "date": "2025-11-27",
+      "time": "05:45",
+      "dateTime": "2025-11-27T05:45:00",
+      "description": "消防表示，八座大廈中有一座沒受波及，四座受控，三座仍在處理中，累計死亡人數至少44人。警方以涉嫌誤殺拘捕維修工程公司三名負責人",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/igiO6GtnjcM?t=13393",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:44",
+        "raw": "DEAD:44",
+        "deaths": 44,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-06:00",
+      "date": "2025-11-27",
+      "time": "06:00",
+      "dateTime": "2025-11-27T06:00:00",
+      "description": "增至44死, 消防預計救援行動最少會持續至黃昏",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/igiO6GtnjcM?t=14269",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        },
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:44",
+        "raw": "DEAD:44",
+        "deaths": 44,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-10:00",
+      "date": "2025-11-27",
+      "time": "10:00",
+      "dateTime": "2025-11-27T10:00:00",
+      "description": "死者家屬到富山殮房認屍，包括殉職消防員何偉豪家人",
+      "category": "SEARCH_RECOVERY",
+      "videoUrl": "https://youtu.be/_RbbsVPI6hM?t=8984",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-13:13",
+      "date": "2025-11-27",
+      "time": "13:13",
+      "dateTime": "2025-11-27T13:13:00",
+      "description": "香港政府安排巡查全港所有正進行大型維修屋苑，檢視棚架及建築物料安全",
+      "category": "RELIEF_ASSISTANCE",
+      "videoUrl": "https://youtu.be/_RbbsVPI6hM?t=20571",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-14:40",
+      "date": "2025-11-27",
+      "time": "14:40",
+      "dateTime": "2025-11-27T14:40:00",
+      "description": "消防處：增至55死",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/_RbbsVPI6hM?t=25818",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:55",
+        "raw": "DEAD:55",
+        "deaths": 55,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-14:58",
+      "date": "2025-11-27",
+      "time": "14:58",
+      "dateTime": "2025-11-27T14:58:00",
+      "description": "消防指四座已救熄，另外三座受控，死亡人數增至最少55人",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/_RbbsVPI6hM?t=26889",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:55",
+        "raw": "DEAD:55",
+        "deaths": 55,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-15:00",
+      "date": "2025-11-27",
+      "time": "15:00",
+      "dateTime": "2025-11-27T15:00:00",
+      "description": "當局開放火場附近的廣福社區會堂，供家屬看照片認屍",
+      "category": "SEARCH_RECOVERY",
+      "videoUrl": "https://youtu.be/_RbbsVPI6hM?t=27015",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-15:50",
+      "date": "2025-11-27",
+      "time": "15:50",
+      "dateTime": "2025-11-27T15:50:00",
+      "description": "行政長官李家超到大埔宏福苑视察火災現場",
+      "category": "OTHER",
+      "videoUrl": "https://youtu.be/_RbbsVPI6hM?t=30016",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-17:00",
+      "date": "2025-11-27",
+      "time": "17:00",
+      "dateTime": "2025-11-27T17:00:00",
+      "description": "政府宣布為每個受影響的宏福苑住戶提供1萬元應急錢，成立3億元援助基金",
+      "category": "RELIEF_ASSISTANCE",
+      "videoUrl": "https://youtu.be/_RbbsVPI6hM?t=34215",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-21:30",
+      "date": "2025-11-27",
+      "time": "21:30",
+      "dateTime": "2025-11-27T21:30:00",
+      "description": "消防處：火警期間，消防處共接獲346宗求助個案，已處理其中296宗個案",
+      "category": "OTHER",
+      "videoUrl": "https://youtu.be/vUe4jpaVGcI?t=9386",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-22:00",
+      "date": "2025-11-27",
+      "time": "22:00",
+      "dateTime": "2025-11-27T22:00:00",
+      "description": "消防處：增至75死",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/vUe4jpaVGcI?t=11188",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        },
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:75",
+        "raw": "DEAD:75",
+        "deaths": 75,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-23:10",
+      "date": "2025-11-27",
+      "time": "23:10",
+      "dateTime": "2025-11-27T23:10:00",
+      "description": "消防共出動304架消防及救援車，派出逾1250名消防人員，收到341宗求助、成功處理279宗",
+      "category": "FIREFIGHTING",
+      "videoUrl": "https://youtu.be/vUe4jpaVGcI?t=15371",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-27-23:15",
+      "date": "2025-11-27",
+      "time": "23:15",
+      "dateTime": "2025-11-27T23:15:00",
+      "description": "宏昌閣再現火光",
+      "category": "FIRE_ESCALATION",
+      "videoUrl": "https://youtu.be/vUe4jpaVGcI?t=15641",
+      "sources": [
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-28-00:00",
+      "date": "2025-11-28",
+      "time": "00:00",
+      "dateTime": "2025-11-28T00:00:00",
+      "description": "消防處：增至83死",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/vUe4jpaVGcI?t=18365",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:83",
+        "raw": "DEAD:83",
+        "deaths": 83,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-28-01:20",
+      "date": "2025-11-28",
+      "time": "01:20",
+      "dateTime": "2025-11-28T01:20:00",
+      "description": "消防處：個別4個單位仍在滅火，預計爆破救援工作今早9時完成",
+      "category": "FIREFIGHTING",
+      "videoUrl": "https://youtu.be/vUe4jpaVGcI?t=23174",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        },
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "REMAINING_CASES:25",
+        "raw": "REMAINING_CASES:25",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-28-06:00",
+      "date": "2025-11-28",
+      "time": "06:00",
+      "dateTime": "2025-11-28T06:00:00",
+      "description": "消防處：火警暫造成94死、76傷。包括12名消防員受傷、1人殉職",
+      "category": "CASUALTY_UPDATE",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        },
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:94,INJURED:76,FIREFIGHTER_INJURED:12,FIREFIGHTER_DEAD:1",
+        "raw": "DEAD:94,INJURED:76,FIREFIGHTER_INJURED:12,FIREFIGHTER_DEAD:1",
+        "deaths": 95,
+        "injured": 88,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-28-10:18",
+      "date": "2025-11-28",
+      "time": "10:18",
+      "dateTime": "2025-11-28T10:18:00",
+      "description": "將火警大致救熄，大火焚燒逾43小時",
+      "category": "FIREFIGHTING",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        },
+        {
+          "name": "SBS Australia",
+          "url": "https://www.sbs.com.au/language/chinese/zh-hant/article/hong-kong-residential-tower-fire-timeline/xey8t7kt2"
+        }
+      ],
+      "casualties": {
+        "status": "STATUS_NONE",
+        "raw": "STATUS_NONE",
+        "deaths": 0,
+        "injured": 0,
+        "missing": 0
+      },
+      "isCategoryEnd": false
+    },
+    {
+      "id": "2025-11-28-15:00",
+      "date": "2025-11-28",
+      "time": "15:00",
+      "dateTime": "2025-11-28T15:00:00",
+      "description": "保安局、警方、消防簡報：火警已造成128死，約有200人情況未明，包括89人未能辨認遺體",
+      "category": "CASUALTY_UPDATE",
+      "videoUrl": "https://youtu.be/LuetIsELfYc?t=11740",
+      "sources": [
+        {
+          "name": "HK01",
+          "url": "https://www.hk01.com/%E7%AA%81%E7%99%BC/60298585/%E5%AE%8F%E7%A6%8F%E8%8B%91%E5%A4%A7%E7%81%AB-%E6%99%82%E5%BA%8F-%E7%84%A1%E6%83%85%E7%81%AB%E7%87%927%E5%BB%88%E5%A5%AA%E9%80%BE%E7%99%BE%E5%91%BD-%E9%80%BE43%E5%B0%8F%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BD%95%E4%BA%8B"
+        }
+      ],
+      "casualties": {
+        "status": "DEAD:128,MISSING:200,UNIDENTIFIED:89",
+        "raw": "DEAD:128,MISSING:200,UNIDENTIFIED:89",
+        "deaths": 128,
+        "injured": 0,
+        "missing": 200
+      },
+      "isCategoryEnd": false
+    }
+  ],
+  "translatableColumns": [
+    "EVENT",
+    "CATEGORY",
+    "CASUALTIES",
+    "SOURCE",
+    "VIDEO",
+    "PHOTO"
+  ]
+}

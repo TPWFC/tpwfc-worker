@@ -208,11 +208,17 @@ func (p *Parser) parseBasicInfo(markdown string) models.BasicInfo {
 				case "DATE_RANGE":
 					info.DateRange = value
 					// Parse start and end dates
-					if strings.Contains(value, "/") {
+					if strings.Contains(value, " - ") {
+						parts := strings.Split(value, " - ")
+						if len(parts) == 2 {
+							info.StartDate = strings.TrimSpace(parts[0])
+							info.EndDate = strings.TrimSpace(parts[1])
+						}
+					} else if strings.Contains(value, "/") {
 						parts := strings.Split(value, "/")
 						if len(parts) == 2 {
-							info.StartDate = parts[0]
-							info.EndDate = parts[1]
+							info.StartDate = strings.TrimSpace(parts[0])
+							info.EndDate = strings.TrimSpace(parts[1])
 						}
 					}
 				case "LOCATION":
