@@ -42,6 +42,7 @@ type KeyStatistics struct {
 
 // FireIncident represents the FireIncident collection.
 type FireIncident struct {
+	SourceHash    *string        `json:"sourceHash,omitempty"`
 	Severity      *string        `json:"severity,omitempty"`
 	Duration      *FireDuration  `json:"duration,omitempty"`
 	IncidentID    *string        `json:"incidentId,omitempty"`

@@ -146,6 +146,11 @@ func (u *Uploader) createOrFindIncident(data *models.Timeline, fireID, fireName,
 		TotalMissing: data.Summary.TotalMissing,
 	}
 
+	// Add source hash from metadata if available
+	if data.Metadata != nil && data.Metadata.Hash != "" {
+		incident.SourceHash = strPtr(data.Metadata.Hash)
+	}
+
 	if data.BasicInfo.IncidentID != "" {
 		incident.IncidentID = strPtr(data.BasicInfo.IncidentID)
 	}

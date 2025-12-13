@@ -117,6 +117,7 @@ func (c *Client) SaveTimelineJSONWithDocument(events []models.TimelineEvent, doc
 
 	// Create output structure with BasicInfo
 	output := map[string]interface{}{
+		"metadata":      doc.Metadata,
 		"timeline":      events,
 		"summary":       summary,
 		"basicInfo":     doc.BasicInfo,
