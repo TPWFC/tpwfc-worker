@@ -84,28 +84,30 @@ type Photo struct {
 	Caption string `json:"caption,omitempty"`
 }
 
-// Source represents a reference source with ID and Title (document level).
+// Source represents a reference source with Name, Title, and URL (document level).
 type Source struct {
-	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Title string `json:"title"`
 	URL   string `json:"url"`
 }
 
+// FirefighterCasualties holds firefighter casualty counts.
+type FirefighterCasualties struct {
+	Deaths  int `json:"deaths"`
+	Injured int `json:"injured"`
+}
+
 // KeyStatistics holds key statistics data.
 type KeyStatistics struct {
-	FireLevels            string   `json:"fireLevels"`
-	FinalDeaths           string   `json:"finalDeaths"`
-	FirefighterCasualties string   `json:"firefighterCasualties"`
-	FireDuration          Duration `json:"fireDuration"`
-	FirefightersDeployed  int      `json:"firefightersDeployed"`
-	FireVehicles          int      `json:"fireVehicles"`
-	HelpCases             int      `json:"helpCases"`
-	HelpCasesProcessed    int      `json:"helpCasesProcessed"`
-	AffectedBuildings     int      `json:"affectedBuildings"`
-	ShelterUsers          int      `json:"shelterUsers"`
-	MissingPersons        int      `json:"missingPersons"`
-	UnidentifiedBodies    int      `json:"unidentifiedBodies"`
+	FinalDeaths           int                   `json:"finalDeaths"`
+	FirefighterCasualties FirefighterCasualties `json:"firefighterCasualties"`
+	FirefightersDeployed  int                   `json:"firefightersDeployed"`
+	FireVehicles          int                   `json:"fireVehicles"`
+	HelpCases             int                   `json:"helpCases"`
+	HelpCasesProcessed    int                   `json:"helpCasesProcessed"`
+	ShelterUsers          int                   `json:"shelterUsers"`
+	MissingPersons        int                   `json:"missingPersons"`
+	UnidentifiedBodies    int                   `json:"unidentifiedBodies"`
 }
 
 // Duration represents a duration.

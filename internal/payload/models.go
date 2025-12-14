@@ -2,11 +2,10 @@ package payload
 
 // Source represents a source reference.
 type Source struct {
-	SourceID *string `json:"sourceId,omitempty"`
-	Name     *string `json:"name,omitempty"`
-	Title    *string `json:"title,omitempty"`
-	URL      *string `json:"url,omitempty"`
-	ID       *string `json:"id,omitempty"`
+	Name  *string `json:"name,omitempty"`
+	Title *string `json:"title,omitempty"`
+	URL   *string `json:"url,omitempty"`
+	ID    *string `json:"id,omitempty"`
 }
 
 // Note represents a note.
@@ -24,20 +23,23 @@ type FireDuration struct {
 	Raw     *string `json:"raw,omitempty"`
 }
 
+// FirefighterCasualties represents firefighter casualty counts.
+type FirefighterCasualties struct {
+	Deaths  *int `json:"deaths,omitempty"`
+	Injured *int `json:"injured,omitempty"`
+}
+
 // KeyStatistics represents key statistics of a fire incident.
 type KeyStatistics struct {
-	FireDuration          *FireDuration `json:"fireDuration,omitempty"`
-	FireLevels            *string       `json:"fireLevels,omitempty"`
-	FinalDeaths           *string       `json:"finalDeaths,omitempty"`
-	FirefighterCasualties *string       `json:"firefighterCasualties,omitempty"`
-	FirefightersDeployed  *int          `json:"firefightersDeployed,omitempty"`
-	FireVehicles          *int          `json:"fireVehicles,omitempty"`
-	HelpCases             *int          `json:"helpCases,omitempty"`
-	HelpCasesProcessed    *int          `json:"helpCasesProcessed,omitempty"`
-	AffectedBuildings     *int          `json:"affectedBuildings,omitempty"`
-	ShelterUsers          *int          `json:"shelterUsers,omitempty"`
-	MissingPersons        *int          `json:"missingPersons,omitempty"`
-	UnidentifiedBodies    *int          `json:"unidentifiedBodies,omitempty"`
+	FinalDeaths           *int                   `json:"finalDeaths,omitempty"`
+	FirefighterCasualties *FirefighterCasualties `json:"firefighterCasualties,omitempty"`
+	FirefightersDeployed  *int                   `json:"firefightersDeployed,omitempty"`
+	FireVehicles          *int                   `json:"fireVehicles,omitempty"`
+	HelpCases             *int                   `json:"helpCases,omitempty"`
+	HelpCasesProcessed    *int                   `json:"helpCasesProcessed,omitempty"`
+	ShelterUsers          *int                   `json:"shelterUsers,omitempty"`
+	MissingPersons        *int                   `json:"missingPersons,omitempty"`
+	UnidentifiedBodies    *int                   `json:"unidentifiedBodies,omitempty"`
 }
 
 // FireIncident represents the FireIncident collection.

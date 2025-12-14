@@ -152,12 +152,16 @@ func (p *Parser) ParseDocument(markdown string) (*models.TimelineDocument, error
 }
 
 // parseSection extracts text content between start and end markers.
+// Filters out HTML comment tags like <!-- TRANSLATE_TEXT -->.
 func (p *Parser) parseSection(markdown string, startPattern, endPattern *regexp.Regexp) string {
 	lines := strings.Split(markdown, "\n")
 
 	var content []string
 
 	inSection := false
+
+	// Pattern to match HTML comments like <!-- TRANSLATE_TEXT --> or <!-- TRANSLATE_ROWS: ... -->
+	commentPattern := regexp.MustCompile(`^\s*<!--.*-->\s*$`)
 
 	for _, line := range lines {
 		if startPattern.MatchString(line) {
@@ -172,7 +176,8 @@ func (p *Parser) parseSection(markdown string, startPattern, endPattern *regexp.
 
 		if inSection {
 			trimmed := strings.TrimSpace(line)
-			if trimmed != "" {
+			// Skip empty lines and HTML comment tags
+			if trimmed != "" && !commentPattern.MatchString(trimmed) {
 				content = append(content, trimmed)
 			}
 		}
@@ -224,7 +229,7 @@ func (p *Parser) parseBasicInfo(markdown string) models.BasicInfo {
 				case "LOCATION":
 					info.Location = value
 				case "MAP":
-					info.Map = parseVideoURL(value) // Reuse parseVideoURL since format is same [text](url)
+					info.Map = value // Keep full markdown [text](url) for translation support
 				case "DISASTER_LEVEL":
 					info.DisasterLevel = value
 				case "DURATION":
@@ -270,19 +275,11 @@ func (p *Parser) parseKeyStatistics(markdown string) models.KeyStatistics {
 				value := strings.TrimSpace(cells[2])
 
 				switch key {
-				case "FIRE_DURATION":
-					if parsedDuration, err := ParseDuration(value); err == nil {
-						stats.FireDuration = parsedDuration
-					} else {
-						// Fallback to raw string if parsing fails
-						stats.FireDuration = models.Duration{Raw: value}
-					}
-				case "FIRE_LEVEL":
-					stats.FireLevels = value
 				case "FINAL_DEATHS":
-					stats.FinalDeaths = value
+					_, _ = fmt.Sscanf(value, "%d", &stats.FinalDeaths)
 				case "FIREFIGHTER_CASUALTIES":
-					stats.FirefighterCasualties = value
+					// Parse "INJURED:x,DEAD:x" format
+					stats.FirefighterCasualties = parseFirefighterCasualties(value)
 				case "FIREFIGHTERS_DEPLOYED":
 					_, _ = fmt.Sscanf(value, "%d", &stats.FirefightersDeployed)
 				case "FIRE_VEHICLES":
@@ -291,8 +288,6 @@ func (p *Parser) parseKeyStatistics(markdown string) models.KeyStatistics {
 					_, _ = fmt.Sscanf(value, "%d", &stats.HelpCases)
 				case "HELP_CASES_PROCESSED":
 					_, _ = fmt.Sscanf(value, "%d", &stats.HelpCasesProcessed)
-				case "AFFECTED_BUILDINGS":
-					_, _ = fmt.Sscanf(value, "%d", &stats.AffectedBuildings)
 				case "SHELTER_USERS":
 					_, _ = fmt.Sscanf(value, "%d", &stats.ShelterUsers)
 				case "MISSING_PERSONS":
@@ -305,6 +300,29 @@ func (p *Parser) parseKeyStatistics(markdown string) models.KeyStatistics {
 	}
 
 	return stats
+}
+
+// parseFirefighterCasualties parses the "INJURED:x,DEAD:x" format to FirefighterCasualties struct.
+func parseFirefighterCasualties(value string) models.FirefighterCasualties {
+	casualties := models.FirefighterCasualties{}
+
+	if value == "" {
+		return casualties
+	}
+
+	// Parse "INJURED:12,DEAD:1" format
+	parts := strings.Split(value, ",")
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if strings.HasPrefix(part, "DEAD:") {
+			_, _ = fmt.Sscanf(part, "DEAD:%d", &casualties.Deaths)
+		}
+		if strings.HasPrefix(part, "INJURED:") {
+			_, _ = fmt.Sscanf(part, "INJURED:%d", &casualties.Injured)
+		}
+	}
+
+	return casualties
 }
 
 // parseSourcesSection extracts sources from the SOURCES section.
@@ -325,18 +343,20 @@ func (p *Parser) parseSourcesSection(markdown string) []models.Source {
 			break
 		}
 
-		if inSection && strings.HasPrefix(line, "|") && !strings.Contains(line, "SOURCE_ID") && !strings.HasPrefix(line, "|---") {
+		// Skip header row (contains SOURCE_NAME) and separator row (----)
+		if inSection && strings.HasPrefix(line, "|") && !strings.Contains(line, "SOURCE_NAME") && !strings.HasPrefix(line, "|---") {
 			cells := strings.Split(line, "|")
-			if len(cells) >= 5 {
-				url := strings.TrimSpace(cells[4])
+			// Table format: | NAME | TITLE | URL |
+			// After split: ["", NAME, TITLE, URL, ""]
+			if len(cells) >= 4 {
+				url := strings.TrimSpace(cells[3])
 				// Remove angle brackets if present
 				url = strings.TrimPrefix(url, "<")
 				url = strings.TrimSuffix(url, ">")
 
 				source := models.Source{
-					ID:    strings.TrimSpace(cells[1]),
-					Name:  strings.TrimSpace(cells[2]),
-					Title: strings.TrimSpace(cells[3]),
+					Name:  strings.TrimSpace(cells[1]),
+					Title: strings.TrimSpace(cells[2]),
 					URL:   url,
 				}
 				sources = append(sources, source)

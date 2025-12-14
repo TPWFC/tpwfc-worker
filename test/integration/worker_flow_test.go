@@ -75,7 +75,7 @@ func TestWorkerFlow_StandardTimeline(t *testing.T) {
 	}
 
 	// Key Statistics
-	if timeline.KeyStatistics.FinalDeaths != "10" {
-		t.Errorf("Expected KeyStats FinalDeaths 10, got %s", timeline.KeyStatistics.FinalDeaths)
+	if timeline.KeyStatistics.FinalDeaths != 10 {
+		t.Errorf("Expected KeyStats FinalDeaths 10, got %d", timeline.KeyStatistics.FinalDeaths)
 	}
 }

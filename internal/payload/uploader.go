@@ -193,24 +193,18 @@ func (u *Uploader) createOrFindIncident(data *models.Timeline, fireID, fireName,
 
 	// Key Statistics
 	incident.KeyStatistics = &KeyStatistics{
-		FireDuration: &FireDuration{
-			Days:    intPtr(data.KeyStatistics.FireDuration.Days),
-			Hours:   intPtr(data.KeyStatistics.FireDuration.Hours),
-			Minutes: intPtr(data.KeyStatistics.FireDuration.Minutes),
-			Seconds: intPtr(data.KeyStatistics.FireDuration.Seconds),
-			Raw:     strPtr(data.KeyStatistics.FireDuration.Raw),
+		FinalDeaths: intPtr(data.KeyStatistics.FinalDeaths),
+		FirefighterCasualties: &FirefighterCasualties{
+			Deaths:  intPtr(data.KeyStatistics.FirefighterCasualties.Deaths),
+			Injured: intPtr(data.KeyStatistics.FirefighterCasualties.Injured),
 		},
-		FireLevels:            strPtr(data.KeyStatistics.FireLevels),
-		FinalDeaths:           strPtr(data.KeyStatistics.FinalDeaths),
-		FirefighterCasualties: strPtr(data.KeyStatistics.FirefighterCasualties),
-		FirefightersDeployed:  intPtr(data.KeyStatistics.FirefightersDeployed),
-		FireVehicles:          intPtr(data.KeyStatistics.FireVehicles),
-		HelpCases:             intPtr(data.KeyStatistics.HelpCases),
-		HelpCasesProcessed:    intPtr(data.KeyStatistics.HelpCasesProcessed),
-		AffectedBuildings:     intPtr(data.KeyStatistics.AffectedBuildings),
-		ShelterUsers:          intPtr(data.KeyStatistics.ShelterUsers),
-		MissingPersons:        intPtr(data.KeyStatistics.MissingPersons),
-		UnidentifiedBodies:    intPtr(data.KeyStatistics.UnidentifiedBodies),
+		FirefightersDeployed: intPtr(data.KeyStatistics.FirefightersDeployed),
+		FireVehicles:         intPtr(data.KeyStatistics.FireVehicles),
+		HelpCases:            intPtr(data.KeyStatistics.HelpCases),
+		HelpCasesProcessed:   intPtr(data.KeyStatistics.HelpCasesProcessed),
+		ShelterUsers:         intPtr(data.KeyStatistics.ShelterUsers),
+		MissingPersons:       intPtr(data.KeyStatistics.MissingPersons),
+		UnidentifiedBodies:   intPtr(data.KeyStatistics.UnidentifiedBodies),
 	}
 
 	// Sources
@@ -218,10 +212,9 @@ func (u *Uploader) createOrFindIncident(data *models.Timeline, fireID, fireName,
 		sources := make([]Source, len(data.Sources))
 		for i, s := range data.Sources {
 			sources[i] = Source{
-				SourceID: strPtr(s.ID),
-				Name:     strPtr(s.Name),
-				Title:    strPtr(s.Title),
-				URL:      strPtr(s.URL),
+				Name:  strPtr(s.Name),
+				Title: strPtr(s.Title),
+				URL:   strPtr(s.URL),
 			}
 		}
 

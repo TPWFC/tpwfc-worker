@@ -36,7 +36,7 @@ func TestTransformer_Transform(t *testing.T) {
 			},
 		},
 		KeyStatistics: models.KeyStatistics{
-			FinalDeaths:    "10 deaths",
+			FinalDeaths:    10,
 			MissingPersons: 2,
 		},
 		Sources: []models.Source{{Name: "Source 1"}},

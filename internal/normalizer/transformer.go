@@ -47,7 +47,7 @@ func (t *Transformer) Transform(data interface{}) (interface{}, error) {
 	}
 
 	// Calculate summary statistics
-	totalDeaths := t.parseStatInt(doc.KeyStatistics.FinalDeaths)
+	totalDeaths := doc.KeyStatistics.FinalDeaths
 
 	// Aggregate injured from events if not available in KeyStatistics
 	totalInjured := 0

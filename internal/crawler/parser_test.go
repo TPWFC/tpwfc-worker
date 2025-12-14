@@ -49,10 +49,10 @@ func TestParser_ParseDocument_Comprehensive(t *testing.T) {
 ## 資料來源
 
 <!-- SOURCES_START -->
-| SOURCE_ID | SOURCE_NAME | SOURCE_TITLE | SOURCE_URL |
-|-----------|-------------|--------------|------------|
-| HK01 | HK01 | 宏福苑大火 | https://hk01.com |
-| SBS | SBS | Title | |
+| SOURCE_NAME | SOURCE_TITLE | SOURCE_URL |
+|-------------|--------------|------------|
+| HK01 | 宏福苑大火 | https://hk01.com |
+| SBS | Title | |
 <!-- SOURCES_END -->
 
 ## 註釋
@@ -75,8 +75,8 @@ func TestParser_ParseDocument_Comprehensive(t *testing.T) {
 		t.Errorf("Expected IncidentID WANG_FUK_COURT_FIRE_2025, got %s", doc.BasicInfo.IncidentID)
 	}
 
-	if doc.BasicInfo.Map != "https://maps.google.com" {
-		t.Errorf("Expected Map URL https://maps.google.com, got %s", doc.BasicInfo.Map)
+	if doc.BasicInfo.Map != "[地圖](https://maps.google.com)" {
+		t.Errorf("Expected Map markdown link [地圖](https://maps.google.com), got %s", doc.BasicInfo.Map)
 	}
 
 	if doc.BasicInfo.Duration.Days != 1 || doc.BasicInfo.Duration.Hours != 19 {
@@ -89,12 +89,13 @@ func TestParser_ParseDocument_Comprehensive(t *testing.T) {
 	}
 
 	// Verify Key Statistics
-	if doc.KeyStatistics.FinalDeaths != "128" {
-		t.Errorf("Expected FinalDeaths 128, got %s", doc.KeyStatistics.FinalDeaths)
+	if doc.KeyStatistics.FinalDeaths != 128 {
+		t.Errorf("Expected FinalDeaths 128, got %d", doc.KeyStatistics.FinalDeaths)
 	}
 
-	if doc.KeyStatistics.FirefighterCasualties != "INJURED:11,DEAD:1" {
-		t.Errorf("Expected FirefighterCasualties INJURED:11,DEAD:1, got %s", doc.KeyStatistics.FirefighterCasualties)
+	if doc.KeyStatistics.FirefighterCasualties.Deaths != 1 || doc.KeyStatistics.FirefighterCasualties.Injured != 11 {
+		t.Errorf("Expected FirefighterCasualties Deaths:1, Injured:11, got Deaths:%d, Injured:%d",
+			doc.KeyStatistics.FirefighterCasualties.Deaths, doc.KeyStatistics.FirefighterCasualties.Injured)
 	}
 
 	if doc.KeyStatistics.FirefightersDeployed != 1250 {
@@ -106,8 +107,8 @@ func TestParser_ParseDocument_Comprehensive(t *testing.T) {
 		t.Errorf("Expected 2 sources, got %d", len(doc.Sources))
 	}
 
-	if doc.Sources[0].ID != "HK01" {
-		t.Errorf("Expected Source[0] ID HK01, got %s", doc.Sources[0].ID)
+	if doc.Sources[0].Name != "HK01" {
+		t.Errorf("Expected Source[0] Name HK01, got %s", doc.Sources[0].Name)
 	}
 
 	// Verify Notes
