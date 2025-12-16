@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"os"
 
+	"tpwfc/internal/crawler/parsers"
 	"tpwfc/internal/models"
 )
 
 // Client manages HTTP communications and data flow for crawling.
 type Client struct {
 	scraper    *Scraper
-	parser     *Parser
+	parser     *parsers.Parser
 	urlManager *URLManager
 }
 
@@ -19,13 +20,13 @@ type Client struct {
 func NewClient() *Client {
 	return &Client{
 		scraper:    NewScraper(),
-		parser:     NewParser(),
+		parser:     parsers.NewParser(),
 		urlManager: nil,
 	}
 }
 
 // NewClientWithDeps creates a new crawler client with injected dependencies.
-func NewClientWithDeps(scraper *Scraper, parser *Parser, urlManager *URLManager) *Client {
+func NewClientWithDeps(scraper *Scraper, parser *parsers.Parser, urlManager *URLManager) *Client {
 	return &Client{
 		scraper:    scraper,
 		parser:     parser,
