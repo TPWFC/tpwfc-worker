@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"tpwfc/internal/crawler"
+	"tpwfc/internal/crawler/parsers"
 )
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 	fmt.Printf("📂 Reading: %s (%d bytes)\n", *inputPath, len(content))
 
 	// Parse based on file type
-	parser := crawler.NewParser()
+	parser := parsers.NewParser()
 	fileType := parser.ParseFileType(string(content))
 	fmt.Printf("🔍 Detected File Type: %s\n", fileType)
 

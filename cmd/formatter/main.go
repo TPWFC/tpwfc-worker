@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"tpwfc/internal/config"
-	"tpwfc/internal/crawler"
+	"tpwfc/internal/crawler/parsers"
 	"tpwfc/internal/formatter"
 	"tpwfc/internal/validator"
 	"tpwfc/pkg/metadata"
@@ -179,7 +179,7 @@ func processFile(path string, write bool, cfg *config.Config) (bool, error) {
 
 		// Note: We need to import "tpwfc/internal/crawler"
 
-		parser := crawler.NewParser()
+		parser := parsers.NewParser()
 		fileType := parser.ParseFileType(formatted)
 
 		shouldValidate := true

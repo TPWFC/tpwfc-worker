@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"tpwfc/internal/crawler"
+	"tpwfc/internal/crawler/parsers"
 	"tpwfc/internal/logger"
 	"tpwfc/internal/models"
 	"tpwfc/internal/normalizer"
@@ -51,7 +52,7 @@ func main() {
 	startTime := time.Now()
 
 	scraper := crawler.NewScraper()
-	parser := crawler.NewParser()
+	parser := parsers.NewParser()
 
 	// Fetch raw content
 	markdown, err := scraper.Scrape(*crawlerURL)

@@ -11,6 +11,7 @@ import (
 
 	"tpwfc/internal/config"
 	"tpwfc/internal/crawler"
+	"tpwfc/internal/crawler/parsers"
 	"tpwfc/internal/validator"
 )
 
@@ -80,7 +81,7 @@ func main() {
 	// Create URL manager with fallback support
 	urlManager := crawler.NewURLManager(cfg)
 	scraper := crawler.NewScraperWithConfig(&cfg.Crawler.Retry, cfg.Advanced.BufferSizeKb)
-	parser := crawler.NewParser()
+	parser := parsers.NewParser()
 	client := crawler.NewClientWithDeps(scraper, parser, urlManager)
 
 	// Create validator
@@ -361,7 +362,7 @@ func runLocalFileMode(filePath, outputPath string, validate bool) {
 
 	// Create components
 	scraper := crawler.NewScraperWithConfig(&cfg.Crawler.Retry, cfg.Advanced.BufferSizeKb)
-	parser := crawler.NewParser()
+	parser := parsers.NewParser()
 	client := crawler.NewClientWithDeps(scraper, parser, nil)
 
 	// Read local file with metrics
