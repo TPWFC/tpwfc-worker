@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"tpwfc/internal/crawler"
+	"tpwfc/internal/crawler/parsers"
 	"tpwfc/internal/models"
 	"tpwfc/internal/normalizer"
 )
@@ -21,7 +21,7 @@ func TestWorkerFlow_StandardTimeline(t *testing.T) {
 	}
 
 	// 1. Ingestion/Processing (Simulating 'worker' phases 1 & 2)
-	parser := crawler.NewParser()
+	parser := parsers.NewParser()
 
 	doc, err := parser.ParseDocument(string(content))
 	if err != nil {

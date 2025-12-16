@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"tpwfc/internal/crawler"
+	"tpwfc/internal/crawler/parsers"
 )
 
 const testEvent1Desc = "Event 1"
@@ -15,7 +16,7 @@ func TestCrawler_LocalFile(t *testing.T) {
 
 	// Initialize Crawler Components
 	scraper := crawler.NewScraper()
-	parser := crawler.NewParser()
+	parser := parsers.NewParser()
 	client := crawler.NewClientWithDeps(scraper, parser, nil)
 
 	// Run Crawl (Simulating what 'crawler' cmd does with -file)

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"tpwfc/internal/crawler"
+	"tpwfc/internal/crawler/parsers"
 )
 
 func TestNormalizer_DetailedTimeline(t *testing.T) {
@@ -19,7 +19,7 @@ func TestNormalizer_DetailedTimeline(t *testing.T) {
 	}
 
 	// Initialize Parser
-	parser := crawler.NewParser()
+	parser := parsers.NewParser()
 
 	// Parse (Simulating 'normalizer' logic)
 	doc, err := parser.ParseDetailedTimeline(string(content))
