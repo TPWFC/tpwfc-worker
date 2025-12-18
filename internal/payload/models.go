@@ -8,6 +8,12 @@ type Source struct {
 	ID    *string `json:"id,omitempty"`
 }
 
+// Map represents a map reference.
+type Map struct {
+	Name *string `json:"name,omitempty"`
+	URL  *string `json:"url,omitempty"`
+}
+
 // Note represents a note.
 type Note struct {
 	Content *string `json:"content,omitempty"`
@@ -50,7 +56,7 @@ type FireIncident struct {
 	IncidentID    *string        `json:"incidentId,omitempty"`
 	KeyStatistics *KeyStatistics `json:"keyStatistics,omitempty"`
 	Location      *string        `json:"location,omitempty"`
-	Map           *string        `json:"map,omitempty"`
+	Map           *Map           `json:"map,omitempty"`
 	DisasterLevel *string        `json:"disasterLevel,omitempty"`
 	FireCause     *string        `json:"fireCause,omitempty"`
 	EndDate       string         `json:"endDate"`
@@ -66,13 +72,17 @@ type FireIncident struct {
 	TotalMissing  int            `json:"totalMissing"`
 }
 
+// CasualtyItem represents a casualty item in a fire event.
+type CasualtyItem struct {
+	Type  string `json:"type"`
+	Count int    `json:"count"`
+}
+
 // Casualties represents the casualties in a fire event.
 type Casualties struct {
-	Status  *string `json:"status,omitempty"`
-	Raw     *string `json:"raw,omitempty"`
-	Deaths  int     `json:"deaths"`
-	Injured int     `json:"injured"`
-	Missing int     `json:"missing"`
+	Status *string        `json:"status,omitempty"`
+	Raw    *string        `json:"raw,omitempty"`
+	Items  []CasualtyItem `json:"items,omitempty"`
 }
 
 // Photo represents a photo in a fire event.

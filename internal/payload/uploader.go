@@ -163,8 +163,11 @@ func (u *Uploader) createOrFindIncident(data *models.Timeline, fireID, fireName,
 		incident.Location = strPtr(data.BasicInfo.Location)
 	}
 
-	if data.BasicInfo.Map != "" {
-		incident.Map = strPtr(data.BasicInfo.Map)
+	if data.BasicInfo.Map.URL != "" || data.BasicInfo.Map.Name != "" {
+		incident.Map = &Map{
+			Name: strPtr(data.BasicInfo.Map.Name),
+			URL:  strPtr(data.BasicInfo.Map.URL),
+		}
 	}
 
 	if data.BasicInfo.DisasterLevel != "" {
@@ -309,6 +312,15 @@ func (u *Uploader) uploadEvent(event models.TimelineEvent, incidentID int, langu
 		}
 	}
 
+	// Convert casualty items
+	var payloadCasualtyItems []CasualtyItem
+	for _, item := range event.Casualties.Items {
+		payloadCasualtyItems = append(payloadCasualtyItems, CasualtyItem{
+			Type:  item.Type,
+			Count: item.Count,
+		})
+	}
+
 	eventStruct := FireEvent{
 		EventID:      event.ID,
 		FireIncident: incidentID,
@@ -318,11 +330,9 @@ func (u *Uploader) uploadEvent(event models.TimelineEvent, incidentID int, langu
 		Description:  event.Description,
 		Category:     event.Category,
 		Casualties: Casualties{
-			Deaths:  event.Casualties.Deaths,
-			Injured: event.Casualties.Injured,
-			Missing: event.Casualties.Missing,
-			Status:  strPtr(event.Casualties.Status),
-			Raw:     strPtr(event.Casualties.Raw),
+			Status: strPtr(event.Casualties.Status),
+			Raw:    strPtr(event.Casualties.Raw),
+			Items:  payloadCasualtyItems,
 		},
 	}
 
