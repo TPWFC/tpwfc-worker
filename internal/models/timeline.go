@@ -20,17 +20,17 @@ type TimelineDocument struct {
 
 // BasicInfo holds the basic incident information.
 type BasicInfo struct {
-	IncidentID        string   `json:"incidentId"`
-	IncidentName      string   `json:"incidentName"`
-	DateRange         string   `json:"dateRange"`
-	StartDate         string   `json:"startDate"`
-	EndDate           string   `json:"endDate"`
+	IncidentID        string    `json:"incidentId"`
+	IncidentName      string    `json:"incidentName"`
+	DateRange         string    `json:"dateRange"`
+	StartDate         string    `json:"startDate"`
+	EndDate           string    `json:"endDate"`
 	Location          string    `json:"location"`
 	Map               MapSource `json:"map"`
 	DisasterLevel     string    `json:"disasterLevel"`
-	Sources           string   `json:"sources"`
-	Duration          Duration `json:"duration"`
-	AffectedBuildings int      `json:"affectedBuildings"`
+	Sources           string    `json:"sources"`
+	Duration          Duration  `json:"duration"`
+	AffectedBuildings int       `json:"affectedBuildings"`
 }
 
 // Timeline represents a complete timeline of events.

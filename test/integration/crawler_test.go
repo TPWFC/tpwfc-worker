@@ -27,7 +27,7 @@ func TestCrawler_LocalFile(t *testing.T) {
 
 	// Verify Events
 	if len(events) != 2 {
-		t.Errorf("Expected 2 events, got %d", len(events))
+		t.Fatalf("Expected 2 events, got %d", len(events))
 	}
 
 	// Verify Event Content

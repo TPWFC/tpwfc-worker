@@ -17,6 +17,7 @@ var (
 	ErrEventMissingTime     = errors.New("event missing time")
 	ErrEventMissingDateTime = errors.New("event missing datetime")
 	ErrNoSources            = errors.New("timeline document contains no sources")
+	ErrEventMissingID       = errors.New("event missing ID")
 )
 
 // Validator handles data validation.
@@ -50,6 +51,10 @@ func (v *Validator) Validate(data interface{}) error {
 
 	// Validate events
 	for i, event := range doc.Events {
+		if event.ID == "" {
+			return fmt.Errorf("%w at index %d", ErrEventMissingID, i)
+		}
+
 		if event.Date == "" {
 			return fmt.Errorf("%w at index %d", ErrEventMissingDate, i)
 		}

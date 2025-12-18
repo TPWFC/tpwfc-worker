@@ -2,8 +2,6 @@ package normalizer
 
 import (
 	"errors"
-	"regexp"
-	"strconv"
 	"time"
 
 	"tpwfc/internal/models"
@@ -14,14 +12,11 @@ var ErrInvalidTransformerDataType = errors.New("invalid data type: expected *mod
 
 // Transformer handles data format transformations.
 type Transformer struct {
-	numberPattern *regexp.Regexp
 }
 
 // NewTransformer creates a new transformer instance.
 func NewTransformer() *Transformer {
-	return &Transformer{
-		numberPattern: regexp.MustCompile(`(\d+)`),
-	}
+	return &Transformer{}
 }
 
 // Transform converts data into target format.
@@ -76,19 +71,4 @@ func (t *Transformer) Transform(data interface{}) (interface{}, error) {
 	timeline.Summary = summary
 
 	return timeline, nil
-}
-
-// parseStatInt extracts the first number found in a string.
-func (t *Transformer) parseStatInt(s string) int {
-	match := t.numberPattern.FindString(s)
-	if match == "" {
-		return 0
-	}
-
-	val, err := strconv.Atoi(match)
-	if err != nil {
-		return 0
-	}
-
-	return val
 }

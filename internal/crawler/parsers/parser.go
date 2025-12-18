@@ -1,4 +1,4 @@
-// Package crawler provides web scraping and markdown parsing functionality for extracting fire timeline data.
+// Package parsers provides web scraping and markdown parsing functionality for extracting fire timeline data.
 package parsers
 
 import (
@@ -20,6 +20,46 @@ const (
 	KeywordTIME       = "TIME"
 	KeywordTimeZhHK   = "時間"
 )
+
+// Column Constants for dynamic parsing.
+const (
+	ColDate       = "DATE"
+	ColTime       = "TIME"
+	ColEvent      = "EVENT"
+	ColCategory   = "CATEGORY"
+	ColCasualties = "CASUALTIES"
+	ColSource     = "SOURCE"
+	ColVideo      = "VIDEO"
+	ColPhoto      = "PHOTO"
+	ColEnd        = "END"
+)
+
+// NormalizeHeader standardizes header names to internal constants.
+func NormalizeHeader(header string) string {
+	h := strings.ToUpper(strings.TrimSpace(header))
+	switch h {
+	case "DATE", "日期":
+		return ColDate
+	case "TIME", "時間", "时间":
+		return ColTime
+	case "EVENT", "事件", "DESCRIPTION", "描述":
+		return ColEvent
+	case "CATEGORY", "類別", "类别":
+		return ColCategory
+	case "CASUALTIES", "死傷狀況", "死伤状况":
+		return ColCasualties
+	case "SOURCE", "SOURCES", "來源", "来源":
+		return ColSource
+	case "VIDEO", "影片", "视频":
+		return ColVideo
+	case "PHOTO", "PHOTOS", "圖片", "图片", "PHOTO/IMAGE":
+		return ColPhoto
+	case "END", "結束", "结束":
+		return ColEnd
+	default:
+		return h
+	}
+}
 
 // Parser errors.
 var (
@@ -100,16 +140,6 @@ func generateEventID(date, time, category string) string {
 
 	// Return first 12 characters of the hash
 	return hashStr[:12]
-}
-
-// extractSourceURLs extracts and concatenates URLs from EventSource slice.
-func extractSourceURLs(sources []string) string {
-	return strings.Join(sources, ",")
-}
-
-// extractPhotoURLs extracts and concatenates URLs from Photo slice.
-func extractPhotoURLs(photos []string) string {
-	return strings.Join(photos, ",")
 }
 
 // parseSection extracts text content between start and end markers.

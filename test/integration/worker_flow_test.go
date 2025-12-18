@@ -57,8 +57,18 @@ func TestWorkerFlow_StandardTimeline(t *testing.T) {
 		t.Errorf("Expected Event 1 description, got %s", timeline.Events[0].Description)
 	}
 
-	if timeline.Events[0].Casualties.Deaths != 1 {
-		t.Errorf("Expected 1 death in Event 1, got %d", timeline.Events[0].Casualties.Deaths)
+	// Helper to find casualty count
+	getCasualtyCount := func(data models.CasualtyData, typ string) int {
+		for _, item := range data.Items {
+			if item.Type == typ {
+				return item.Count
+			}
+		}
+		return 0
+	}
+
+	if count := getCasualtyCount(timeline.Events[0].Casualties, "DEAD"); count != 1 {
+		t.Errorf("Expected 1 death in Event 1, got %d", count)
 	}
 
 	// Summary

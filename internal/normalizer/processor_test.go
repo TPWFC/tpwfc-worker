@@ -25,6 +25,7 @@ func TestProcessor_Process(t *testing.T) {
 		},
 		Events: []models.TimelineEvent{
 			{
+				ID:       "event-1",
 				Date:     "2023-01-01",
 				Time:     "10:00",
 				DateTime: "2023-01-01T10:00:00",

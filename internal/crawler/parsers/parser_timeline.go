@@ -1,4 +1,4 @@
-// Package crawler provides timeline.md (FIRE_TIMELINE) parsing functionality.
+// Package parsers provides timeline.md (FIRE_TIMELINE) parsing functionality.
 package parsers
 
 import (
@@ -241,6 +241,9 @@ func (p *Parser) parseSourcesSection(markdown string) []models.Source {
 	lines := strings.Split(markdown, "\n")
 	inSection := false
 
+	// Pattern to match table separator rows: lines with only |, -, :, and spaces
+	separatorPattern := regexp.MustCompile(`^\|[\s\-:\|]+\|$`)
+
 	for _, line := range lines {
 		if p.sourcesStartPattern.MatchString(line) {
 			inSection = true
@@ -252,8 +255,11 @@ func (p *Parser) parseSourcesSection(markdown string) []models.Source {
 			break
 		}
 
-		// Skip header row (contains SOURCE_NAME) and separator row (----)
-		if inSection && strings.HasPrefix(line, "|") && !strings.Contains(line, "SOURCE_NAME") && !strings.HasPrefix(line, "|---") {
+		// Skip header row (contains SOURCE_NAME), separator rows (---- patterns), and empty lines
+		trimmedLine := strings.TrimSpace(line)
+		if inSection && strings.HasPrefix(trimmedLine, "|") && 
+			!strings.Contains(line, "SOURCE_NAME") && 
+			!separatorPattern.MatchString(trimmedLine) {
 			cells := strings.Split(line, "|")
 			// Table format: | NAME | TITLE | URL |
 			// After split: ["", NAME, TITLE, URL, ""]
@@ -279,10 +285,9 @@ func (p *Parser) parseSourcesSection(markdown string) []models.Source {
 // ParseMarkdownTable extracts timeline events from markdown table.
 func (p *Parser) ParseMarkdownTable(markdown string) ([]models.TimelineEvent, error) {
 	var events []models.TimelineEvent
-
 	var currentDate string
-
 	var inTable bool
+	var colMap map[string]int
 
 	// Split by lines
 	lines := strings.Split(markdown, "\n")
@@ -293,53 +298,76 @@ func (p *Parser) ParseMarkdownTable(markdown string) ([]models.TimelineEvent, er
 		// Check for table start marker
 		if p.tableStartPattern.MatchString(line) {
 			inTable = true
-
+			colMap = nil // Reset column map for new table
 			continue
 		}
 
 		// Check for table end marker
 		if p.tableEndPattern.MatchString(line) {
 			inTable = false
-
 			continue
 		}
 
 		// Skip empty lines and table separators
-		if line == "" || strings.HasPrefix(line, "|---") {
+		if line == "" || strings.HasPrefix(line, "|-") || strings.HasPrefix(line, "| -") || strings.Contains(line, "|---") {
 			continue
 		}
 
 		// If we found table boundaries, only parse between them
 		if inTable {
-			// Parse table row - skip header by checking if first two data columns are headers (日期, 時間)
 			if strings.HasPrefix(line, "|") {
 				cells := strings.Split(line, "|")
-				if len(cells) >= 3 {
-					firstCol := strings.TrimSpace(cells[1])
-					secondCol := strings.TrimSpace(cells[2])
-					// Skip if this is the header row
-					if firstCol == "日期" || secondCol == KeywordTimeZhHK || firstCol == "DATE" || secondCol == KeywordTIME {
-						continue
+				// Filter empty cells from split
+				var cleanCells []string
+				cleanCells = append(cleanCells, cells...)
+				// Remove first and last empty elements often caused by "| data |" split
+				if len(cleanCells) > 0 && strings.TrimSpace(cleanCells[0]) == "" {
+					cleanCells = cleanCells[1:]
+				}
+				if len(cleanCells) > 0 && strings.TrimSpace(cleanCells[len(cleanCells)-1]) == "" {
+					cleanCells = cleanCells[:len(cleanCells)-1]
+				}
+
+				// Check if this is a header row
+				isHeader := false
+				for _, cell := range cleanCells {
+					h := NormalizeHeader(cell)
+					if h == ColDate || h == ColTime || h == ColEvent {
+						isHeader = true
+						break
 					}
 				}
 
-				event, err := p.parseTableRow(line, currentDate)
-				if err == nil && event != nil {
-					events = append(events, *event)
+				if isHeader {
+					colMap = make(map[string]int)
+					for idx, cell := range cleanCells {
+						colMap[NormalizeHeader(cell)] = idx
+					}
+					continue
+				}
+
+				// Only parse if we have a valid column map
+				if colMap != nil {
+					event, err := p.parseTableRow(cleanCells, currentDate, colMap)
+					if err == nil && event != nil {
+						events = append(events, *event)
+						// Update current date if the row had a specific date
+						if event.Date != "" {
+							currentDate = event.Date
+						}
+					}
 				}
 			}
-
 			continue
 		}
 
-		// Legacy parsing mode (when no table markers present)
+		// Legacy parsing mode (when no table markers present or strictly for date headers)
 		// Check for date header (multiple formats)
 		dateMatch := p.datePattern.FindStringSubmatch(line)
 		if len(dateMatch) > 0 {
 			month := dateMatch[1]
 			day := dateMatch[2]
 			currentDate = fmt.Sprintf("2025-%s-%s", padZero(month), padZero(day))
-
 			continue
 		}
 
@@ -349,101 +377,47 @@ func (p *Parser) ParseMarkdownTable(markdown string) ([]models.TimelineEvent, er
 			month := dateMatchAlt[1]
 			day := dateMatchAlt[2]
 			currentDate = fmt.Sprintf("2025-%s-%s", padZero(month), padZero(day))
-
 			continue
-		}
-
-		// Parse table row (legacy mode)
-		if strings.HasPrefix(line, "|") {
-			// Split to check if second column is header (時間)
-			cells := strings.Split(line, "|")
-			if len(cells) >= 3 {
-				secondCol := strings.TrimSpace(cells[2])
-				// Skip if this is the header row
-				if secondCol == "時間" || secondCol == "TIME" {
-					continue
-				}
-			}
-
-			event, err := p.parseTableRow(line, currentDate)
-			if err == nil && event != nil {
-				events = append(events, *event)
-			}
 		}
 	}
 
 	return events, nil
 }
 
-// parseTableRow parses a single table row.
-func (p *Parser) parseTableRow(row string, currentDate string) (*models.TimelineEvent, error) {
-	// Split row by pipes
-	cells := strings.Split(row, "|")
-
-	// Should have at least 7 cells: empty, date, time, description, category, casualties, sources, empty
-	// With video column: empty, date, time, description, category, casualties, sources, video, empty
-	// With photo column: empty, date, time, description, category, casualties, sources, video, photos, empty
-	// With end column: empty, date, time, description, category, casualties, sources, video, photos, end, empty
-	if len(cells) < 7 {
-		return nil, ErrInsufficientCells
+// parseTableRow parses a single table row using the column map.
+func (p *Parser) parseTableRow(cells []string, currentDate string, colMap map[string]int) (*models.TimelineEvent, error) {
+	// Helper to get cell value safely
+	getCell := func(colName string) string {
+		if idx, ok := colMap[colName]; ok && idx < len(cells) {
+			return strings.TrimSpace(cells[idx])
+		}
+		return ""
 	}
 
-	// Extract date from cell 1 (if present) or use currentDate
-	dateStr := strings.TrimSpace(cells[1])
-	if dateStr == "" || dateStr == "日期" || dateStr == "DATE" || strings.Contains(dateStr, "11月") {
-		// Skip header row or empty date
+	// Extract basic fields
+	dateStr := getCell(ColDate)
+	timeStr := getCell(ColTime)
+	description := getCell(ColEvent)
+	category := getCell(ColCategory)
+	casualtiesStr := getCell(ColCasualties)
+	sourcesStr := getCell(ColSource)
+	videoStr := getCell(ColVideo)
+	photosStr := getCell(ColPhoto)
+	endStr := getCell(ColEnd)
+
+	// Validate essential fields
+	if timeStr == "" {
+		// If time is missing, it might be a malformed row or separator
 		return nil, ErrInvalidRow
 	}
 
-	// Check if date is in YYYY-MM-DD format
+	// Update date if present
 	datePattern := regexp.MustCompile(`\d{4}-\d{2}-\d{2}`)
-	if datePattern.MatchString(dateStr) {
-		// Use the date from the table
+	if dateStr != "" && datePattern.MatchString(dateStr) {
 		currentDate = dateStr
 	}
 
-	timeStr := strings.TrimSpace(cells[2])
-	description := strings.TrimSpace(cells[3])
-	category := strings.TrimSpace(cells[4])
-	casualtiesStr := strings.TrimSpace(cells[5])
-
-	sourcesStr := ""
-	if len(cells) > 6 {
-		sourcesStr = strings.TrimSpace(cells[6])
-	}
-
-	// Extract video URL from cell 7 (if present) - expects markdown link format [text](url)
-	var videoURL string
-
-	if len(cells) > 7 {
-		videoStr := strings.TrimSpace(cells[7])
-		videoURL = parseVideoURL(videoStr)
-	}
-
-	// Extract photos from cell 8 (if present)
-	var photosRaw []Photo
-
-	if len(cells) > 8 {
-		photosStr := strings.TrimSpace(cells[8])
-		photosRaw = parsePhotos(photosStr)
-	}
-
-	// Extract end flag from cell 9 (if present)
-	var isCategoryEnd bool
-	if len(cells) > 9 {
-		endStr := strings.TrimSpace(cells[9])
-		if strings.EqualFold(endStr, "x") || strings.EqualFold(endStr, "true") {
-			isCategoryEnd = true
-		}
-	}
-
-	// Skip invalid rows
-	if timeStr == "" || timeStr == "時間" || timeStr == "TIME" {
-		return nil, ErrInvalidRow
-	}
-
 	// Parse time
-	timeStr = strings.TrimSpace(timeStr)
 	if !isValidTime(timeStr) {
 		return nil, fmt.Errorf("%w: %s", ErrInvalidTimeFormat, timeStr)
 	}
@@ -467,31 +441,33 @@ func (p *Parser) parseTableRow(row string, currentDate string) (*models.Timeline
 	// Parse sources
 	sourcesRaw := p.parseSources(sourcesStr)
 	var sources []models.EventSource
-	var sourceURLs []string
 	for _, s := range sourcesRaw {
 		sources = append(sources, models.EventSource{
 			Name: s.Name,
 			URL:  s.URL,
 		})
-		if s.URL != "" {
-			sourceURLs = append(sourceURLs, s.URL)
-		}
 	}
 
-	// Convert photos
+	// Parse video
+	videoURL := parseVideoURL(videoStr)
+
+	// Parse photos
+	photosRaw := parsePhotos(photosStr)
 	var photos []models.Photo
-	var photoURLs []string
 	for _, ph := range photosRaw {
 		photos = append(photos, models.Photo{
 			Caption: ph.Caption,
 			URL:     ph.URL,
 		})
-		if ph.URL != "" {
-			photoURLs = append(photoURLs, ph.URL)
-		}
 	}
 
-	// Create event ID using SHA-256 hash (only locale-independent fields)
+	// Check end flag
+	var isCategoryEnd bool
+	if strings.EqualFold(endStr, "x") || strings.EqualFold(endStr, "true") {
+		isCategoryEnd = true
+	}
+
+	// Create event ID
 	eventID := generateEventID(
 		currentDate,
 		normalizeTime(timeStr),

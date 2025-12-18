@@ -24,6 +24,7 @@ func TestValidator_Validate(t *testing.T) {
 		},
 		Events: []models.TimelineEvent{
 			{
+				ID:       "event-1",
 				Date:     "2023-01-01",
 				Time:     "10:00",
 				DateTime: "2023-01-01T10:00:00",
@@ -88,7 +89,7 @@ func TestValidator_Validate_Errors(t *testing.T) {
 			data: &models.TimelineDocument{
 				BasicInfo: models.BasicInfo{IncidentID: "id", IncidentName: "name"},
 				Events: []models.TimelineEvent{
-					{Date: "2023-01-01", Time: "10:00", DateTime: "2023-01-01T10:00:00"},
+					{ID: "event-1", Date: "2023-01-01", Time: "10:00", DateTime: "2023-01-01T10:00:00"},
 				},
 				Sources: []models.Source{},
 			},

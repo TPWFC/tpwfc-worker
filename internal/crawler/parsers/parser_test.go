@@ -75,8 +75,8 @@ func TestParser_ParseDocument_Comprehensive(t *testing.T) {
 		t.Errorf("Expected IncidentID WANG_FUK_COURT_FIRE_2025, got %s", doc.BasicInfo.IncidentID)
 	}
 
-	if doc.BasicInfo.Map != "[地圖](https://maps.google.com)" {
-		t.Errorf("Expected Map markdown link [地圖](https://maps.google.com), got %s", doc.BasicInfo.Map)
+	if doc.BasicInfo.Map.Name != "地圖" || doc.BasicInfo.Map.URL != "https://maps.google.com" {
+		t.Errorf("Expected Map Name: 地圖, URL: https://maps.google.com, got Name: %s, URL: %s", doc.BasicInfo.Map.Name, doc.BasicInfo.Map.URL)
 	}
 
 	if doc.BasicInfo.Duration.Days != 1 || doc.BasicInfo.Duration.Hours != 19 {
@@ -114,6 +114,39 @@ func TestParser_ParseDocument_Comprehensive(t *testing.T) {
 	// Verify Notes
 	if len(doc.Notes) != 2 {
 		t.Errorf("Expected 2 notes, got %d", len(doc.Notes))
+	}
+}
+
+func TestParser_ParseDocument_DynamicColumns(t *testing.T) {
+	markdown := `
+<!-- TIMELINE_TABLE_START -->
+| TIME | DATE | EVENT | CATEGORY | CASUALTIES | SOURCE | VIDEO | PHOTO |
+|------|------|-------|----------|------------|--------|-------|-------|
+| 14:00 | 2025-11-26 | Event 1 | CAT1 | STATUS_NONE | Source1 | [Video](http://v.com) | |
+<!-- TIMELINE_TABLE_END -->
+`
+	parser := NewParser()
+	events, err := parser.ParseMarkdownTable(markdown)
+	if err != nil {
+		t.Fatalf("ParseMarkdownTable failed: %v", err)
+	}
+
+	if len(events) != 1 {
+		t.Fatalf("Expected 1 event, got %d", len(events))
+	}
+
+	event := events[0]
+	if event.Time != "14:00" {
+		t.Errorf("Expected Time 14:00, got %s", event.Time)
+	}
+	if event.Date != "2025-11-26" {
+		t.Errorf("Expected Date 2025-11-26, got %s", event.Date)
+	}
+	if event.Description != "Event 1" {
+		t.Errorf("Expected Description Event 1, got %s", event.Description)
+	}
+	if event.VideoURL != "http://v.com" {
+		t.Errorf("Expected VideoURL http://v.com, got %s", event.VideoURL)
 	}
 }
 

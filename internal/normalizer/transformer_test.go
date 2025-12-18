@@ -29,10 +29,18 @@ func TestTransformer_Transform(t *testing.T) {
 		},
 		Events: []models.TimelineEvent{
 			{
-				Casualties: models.CasualtyData{Injured: 5},
+				Casualties: models.CasualtyData{
+					Items: []models.CasualtyItem{
+						{Type: "INJURED", Count: 5},
+					},
+				},
 			},
 			{
-				Casualties: models.CasualtyData{Injured: 3},
+				Casualties: models.CasualtyData{
+					Items: []models.CasualtyItem{
+						{Type: "INJURED", Count: 3},
+					},
+				},
 			},
 		},
 		KeyStatistics: models.KeyStatistics{

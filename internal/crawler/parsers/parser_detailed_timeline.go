@@ -289,15 +289,11 @@ func (p *Parser) parseDetailedTimelineEvents(phaseContent string) []models.Detai
 			// Parse sources for URL extraction
 			sourcesRaw := p.parseSources(sourcesStr)
 			var sources []models.EventSource
-			var sourceURLs []string
 			for _, s := range sourcesRaw {
 				sources = append(sources, models.EventSource{
 					Name: s.Name,
 					URL:  s.URL,
 				})
-				if s.URL != "" {
-					sourceURLs = append(sourceURLs, s.URL)
-				}
 			}
 
 			// Construct DateTime

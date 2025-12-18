@@ -1,3 +1,4 @@
+// Package crawler provides the crawler client for fetching and saving fire timeline data.
 package crawler
 
 import (
@@ -183,11 +184,12 @@ func calculateSummary(events []models.TimelineEvent) map[string]interface{} {
 
 	for i, event := range events {
 		for _, item := range event.Casualties.Items {
-			if item.Type == "DEAD" {
+			switch item.Type {
+			case "DEAD":
 				totalDeaths += item.Count
-			} else if item.Type == "INJURED" {
+			case "INJURED":
 				totalInjured += item.Count
-			} else if item.Type == "MISSING" {
+			case "MISSING":
 				totalMissing += item.Count
 			}
 		}
