@@ -257,8 +257,8 @@ func (p *Parser) parseSourcesSection(markdown string) []models.Source {
 
 		// Skip header row (contains SOURCE_NAME), separator rows (---- patterns), and empty lines
 		trimmedLine := strings.TrimSpace(line)
-		if inSection && strings.HasPrefix(trimmedLine, "|") && 
-			!strings.Contains(line, "SOURCE_NAME") && 
+		if inSection && strings.HasPrefix(trimmedLine, "|") &&
+			!strings.Contains(line, "SOURCE_NAME") &&
 			!separatorPattern.MatchString(trimmedLine) {
 			cells := strings.Split(line, "|")
 			// Table format: | NAME | TITLE | URL |
