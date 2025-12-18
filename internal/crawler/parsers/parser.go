@@ -198,33 +198,49 @@ func (p *Parser) parseCasualties(text string) CasualtyData {
 			// Handle DEAD:X or DEAD:X(ON_SITE:Y,TRANSIT:Z)
 			if strings.HasPrefix(part, "DEAD:") {
 				if num, ok := extractStatusCodeNumber(part, "DEAD"); ok {
-					data.Deaths = num
+					data.Items = append(data.Items, CasualtyItem{Type: "DEAD", Count: num})
 				}
 			}
 			// Handle INJURED:X
 			if strings.HasPrefix(part, "INJURED:") {
 				if num, ok := extractStatusCodeNumber(part, "INJURED"); ok {
-					data.Injured = num
+					data.Items = append(data.Items, CasualtyItem{Type: "INJURED", Count: num})
 				}
 			}
 			// Handle MISSING:X
 			if strings.HasPrefix(part, "MISSING:") {
 				if num, ok := extractStatusCodeNumber(part, "MISSING"); ok {
-					data.Missing = num
+					data.Items = append(data.Items, CasualtyItem{Type: "MISSING", Count: num})
 				}
 			}
-			// Handle FIREFIGHTER_DEAD:X (add to deaths)
+			// Handle FIREFIGHTER_DEAD:X
 			if strings.HasPrefix(part, "FIREFIGHTER_DEAD:") {
 				if num, ok := extractStatusCodeNumber(part, "FIREFIGHTER_DEAD"); ok {
-					data.Deaths += num
+					data.Items = append(data.Items, CasualtyItem{Type: "FIREFIGHTER_DEAD", Count: num})
 				}
 			}
-			// Handle FIREFIGHTER_INJURED:X (add to injured)
+			// Handle FIREFIGHTER_INJURED:X
 			if strings.HasPrefix(part, "FIREFIGHTER_INJURED:") {
 				if num, ok := extractStatusCodeNumber(part, "FIREFIGHTER_INJURED"); ok {
-					data.Injured += num
+					data.Items = append(data.Items, CasualtyItem{Type: "FIREFIGHTER_INJURED", Count: num})
 				}
 			}
+			// Handle REMAINING_CASES:X
+			if strings.HasPrefix(part, "REMAINING_CASES:") {
+				if num, ok := extractStatusCodeNumber(part, "REMAINING_CASES"); ok {
+					data.Items = append(data.Items, CasualtyItem{Type: "REMAINING_CASES", Count: num})
+				}
+			}
+			// Handle UNIDENTIFIED:X
+			if strings.HasPrefix(part, "UNIDENTIFIED:") {
+				if num, ok := extractStatusCodeNumber(part, "UNIDENTIFIED"); ok {
+					data.Items = append(data.Items, CasualtyItem{Type: "UNIDENTIFIED", Count: num})
+				}
+			}
+		}
+
+		if len(data.Items) > 0 {
+			data.Status = "STATUS_UPDATE"
 		}
 
 		return data
@@ -238,33 +254,41 @@ func (p *Parser) parseCasualties(text string) CasualtyData {
 
 		if strings.Contains(part, "死") {
 			if num, ok := extractNumber(part, "死"); ok {
-				data.Deaths = num
+				data.Items = append(data.Items, CasualtyItem{Type: "DEAD", Count: num})
 			}
 		}
 
 		if strings.Contains(part, "傷") {
 			if num, ok := extractNumber(part, "傷"); ok {
-				data.Injured = num
+				data.Items = append(data.Items, CasualtyItem{Type: "INJURED", Count: num})
 			}
 		}
 
 		if strings.Contains(part, "失蹤") || strings.Contains(part, "下落不明") {
 			if num, ok := extractNumber(part, "失蹤|下落不明"); ok {
-				data.Missing = num
+				data.Items = append(data.Items, CasualtyItem{Type: "MISSING", Count: num})
 			}
 		}
+	}
+
+	if len(data.Items) > 0 {
+		data.Status = "STATUS_UPDATE"
 	}
 
 	return data
 }
 
+// CasualtyItem is a temporary type for internal parsing.
+type CasualtyItem struct {
+	Type  string
+	Count int
+}
+
 // CasualtyData is a temporary type for internal parsing - maps to models.CasualtyData.
 type CasualtyData struct {
-	Status  string
-	Raw     string
-	Deaths  int
-	Injured int
-	Missing int
+	Status string
+	Raw    string
+	Items  []CasualtyItem
 }
 
 // parseSources extracts sources and URLs from text.

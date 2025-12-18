@@ -121,7 +121,24 @@ func (p *Parser) parseBasicInfo(markdown string) models.BasicInfo {
 				case "LOCATION":
 					info.Location = value
 				case "MAP":
-					info.Map = value // Keep full markdown [text](url) for translation support
+					// Parse formatted [text](url) into struct
+					// Expected format: [Map Name](https://maps.google.com...)
+					matches := regexp.MustCompile(`\[(.*?)\]\((.*?)\)`).FindStringSubmatch(value)
+					if len(matches) == 3 {
+						info.Map = models.MapSource{
+							Name: matches[1],
+							URL:  matches[2],
+						}
+					} else {
+						// Fallback if not formatted correctly, assume entire value is URL?
+						// Or just put value in Name if URL is missing?
+						// Let's assume URL if it starts with http
+						if strings.HasPrefix(value, "http") {
+							info.Map = models.MapSource{URL: value}
+						} else {
+							info.Map = models.MapSource{Name: value}
+						}
+					}
 				case "DISASTER_LEVEL":
 					info.DisasterLevel = value
 				case "DURATION":
@@ -433,12 +450,18 @@ func (p *Parser) parseTableRow(row string, currentDate string) (*models.Timeline
 
 	// Parse casualties
 	casualtiesData := p.parseCasualties(casualtiesStr)
+	var casualtyItems []models.CasualtyItem
+	for _, item := range casualtiesData.Items {
+		casualtyItems = append(casualtyItems, models.CasualtyItem{
+			Type:  item.Type,
+			Count: item.Count,
+		})
+	}
+
 	casualties := models.CasualtyData{
-		Status:  casualtiesData.Status,
-		Raw:     casualtiesData.Raw,
-		Deaths:  casualtiesData.Deaths,
-		Injured: casualtiesData.Injured,
-		Missing: casualtiesData.Missing,
+		Status: casualtiesData.Status,
+		Raw:    casualtiesData.Raw,
+		Items:  casualtyItems,
 	}
 
 	// Parse sources

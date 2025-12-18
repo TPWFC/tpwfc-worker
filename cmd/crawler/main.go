@@ -464,9 +464,12 @@ func runLocalFileMode(filePath, outputPath string, validate bool) {
 			event := events[i]
 			fmt.Printf("  [%s] %s\n", event.DateTime, event.Description)
 
-			if event.Casualties.Deaths > 0 || event.Casualties.Injured > 0 {
-				fmt.Printf("    Deaths: %d, Injured: %d, Missing: %d\n",
-					event.Casualties.Deaths, event.Casualties.Injured, event.Casualties.Missing)
+			if len(event.Casualties.Items) > 0 {
+				fmt.Printf("    Casualties: ")
+				for _, item := range event.Casualties.Items {
+					fmt.Printf("%s: %d, ", item.Type, item.Count)
+				}
+				fmt.Println()
 			}
 		}
 	}

@@ -25,9 +25,9 @@ type BasicInfo struct {
 	DateRange         string   `json:"dateRange"`
 	StartDate         string   `json:"startDate"`
 	EndDate           string   `json:"endDate"`
-	Location          string   `json:"location"`
-	Map               string   `json:"map"`
-	DisasterLevel     string   `json:"disasterLevel"`
+	Location          string    `json:"location"`
+	Map               MapSource `json:"map"`
+	DisasterLevel     string    `json:"disasterLevel"`
 	Sources           string   `json:"sources"`
 	Duration          Duration `json:"duration"`
 	AffectedBuildings int      `json:"affectedBuildings"`
@@ -63,13 +63,17 @@ type TimelineEvent struct {
 	IsCategoryEnd bool          `json:"isCategoryEnd"`
 }
 
+// CasualtyItem represents a single casualty count by type.
+type CasualtyItem struct {
+	Type  string `json:"type"`
+	Count int    `json:"count"`
+}
+
 // CasualtyData holds casualty statistics.
 type CasualtyData struct {
-	Status  string `json:"status"`
-	Raw     string `json:"raw"`
-	Deaths  int    `json:"deaths"`
-	Injured int    `json:"injured"`
-	Missing int    `json:"missing"`
+	Status string         `json:"status"`
+	Raw    string         `json:"raw"`
+	Items  []CasualtyItem `json:"items"`
 }
 
 // EventSource represents a reference source attached to an event.
@@ -108,6 +112,12 @@ type KeyStatistics struct {
 	ShelterUsers          int                   `json:"shelterUsers"`
 	MissingPersons        int                   `json:"missingPersons"`
 	UnidentifiedBodies    int                   `json:"unidentifiedBodies"`
+}
+
+// MapSource represents a map reference with Name and URL.
+type MapSource struct {
+	Name string `json:"name"`
+	URL  string `json:"url"`
 }
 
 // Duration represents a duration.

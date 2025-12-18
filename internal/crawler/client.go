@@ -182,9 +182,15 @@ func calculateSummary(events []models.TimelineEvent) map[string]interface{} {
 	endDate := ""
 
 	for i, event := range events {
-		totalDeaths += event.Casualties.Deaths
-		totalInjured += event.Casualties.Injured
-		totalMissing += event.Casualties.Missing
+		for _, item := range event.Casualties.Items {
+			if item.Type == "DEAD" {
+				totalDeaths += item.Count
+			} else if item.Type == "INJURED" {
+				totalInjured += item.Count
+			} else if item.Type == "MISSING" {
+				totalMissing += item.Count
+			}
+		}
 
 		if i == 0 {
 			startDate = event.Date
