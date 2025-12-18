@@ -52,7 +52,11 @@ func (t *Transformer) Transform(data interface{}) (interface{}, error) {
 	// Aggregate injured from events if not available in KeyStatistics
 	totalInjured := 0
 	for _, event := range doc.Events {
-		totalInjured += event.Casualties.Injured
+		for _, item := range event.Casualties.Items {
+			if item.Type == "INJURED" {
+				totalInjured += item.Count
+			}
+		}
 	}
 
 	// KeyStatistics might have help cases which could be used, but event aggregation is likely more accurate for "Injured"
