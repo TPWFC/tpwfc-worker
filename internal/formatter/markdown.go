@@ -11,10 +11,10 @@ import (
 
 // FormatMarkdown takes a raw markdown string and formats it,
 // specifically focusing on fixing table formatting issues.
-// It also strips any existing metadata block, returning only the cleaned formatted content.
+// It also handles metadata preservation by extracting and resigning.
 func FormatMarkdown(content string) (string, error) {
 	// Strip metadata before formatting
-	_, cleanContent := metadata.Extract(content)
+	meta, cleanContent := metadata.Extract(content)
 
 	lines := strings.Split(cleanContent, "\n")
 
@@ -27,6 +27,7 @@ func FormatMarkdown(content string) (string, error) {
 		trimmedLine := strings.TrimSpace(line)
 
 		// Check if the line looks like a table row
+		// Simple heuristic: starts and ends with |
 		if strings.HasPrefix(trimmedLine, "|") && strings.HasSuffix(trimmedLine, "|") {
 			tableBuffer = append(tableBuffer, line)
 
@@ -47,13 +48,21 @@ func FormatMarkdown(content string) (string, error) {
 		formattedLines = append(formattedLines, processTable(tableBuffer)...)
 	}
 
-	return strings.Join(formattedLines, "\n"), nil
+	formattedContent := strings.Join(formattedLines, "\n")
+
+	// Restore metadata (Sign will calculate new hash and append block)
+	isValid := false
+	if meta != nil {
+		isValid = meta.Validation
+	}
+
+	return metadata.Sign(formattedContent, isValid), nil
 }
 
 func processTable(rows []string) []string {
 	// If it's just one line, it's not really a table we can format nicely (needs header+separator)
-	if len(rows) == 0 {
-		return nil
+	if len(rows) < 2 {
+		return rows
 	}
 
 	// 1. Parse all cells
@@ -62,11 +71,9 @@ func processTable(rows []string) []string {
 	for _, row := range rows {
 		// Remove leading/trailing pipes for splitting, but keep them in mind for reconstruction
 		// Standard markdown table: | cell1 | cell2 |
-		// Split by pipe
 		parts := strings.Split(row, "|")
 
 		// The split will result in empty strings at start/end if the line starts/ends with pipe
-		// e.g. "| a | b |" -> ["", " a ", " b ", ""]
 		if len(parts) > 0 && strings.TrimSpace(parts[0]) == "" {
 			parts = parts[1:]
 		}
@@ -85,25 +92,30 @@ func processTable(rows []string) []string {
 
 	// 2. Validate table structure
 	if len(table) == 0 {
-		return rows // return original if parsing failed
+		return rows
 	}
 
 	colCount := len(table[0])
+	// Find max columns
+	for _, row := range table {
+		if len(row) > colCount {
+			colCount = len(row)
+		}
+	}
 
 	// Identify separator row (usually 2nd row, index 1)
 	separatorRowIdx := -1
 
 	if len(table) > 1 {
 		isSep := true
-
 		for _, cell := range table[1] {
 			trim := strings.TrimSpace(cell)
 			trim = strings.ReplaceAll(trim, "-", "")
-			trim = strings.ReplaceAll(trim, ":", "")
+			trim = strings.ReplaceAll(trim, ":", "") // Handle alignment :--- or ---:
+			trim = strings.ReplaceAll(trim, " ", "")
 
 			if trim != "" {
 				isSep = false
-
 				break
 			}
 		}
@@ -157,6 +169,8 @@ func processTable(rows []string) []string {
 
 			if isSeparator {
 				// Reconstruct separator based on alignment
+				// For now default to "---" extended to width
+				// We could preserve alignment from original if we parsed it, but simpler is to just use ---
 				dashCount := colWidths[j]
 				sb.WriteString(strings.Repeat("-", dashCount))
 			} else {

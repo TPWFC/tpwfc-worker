@@ -3,6 +3,8 @@ package formatter
 import (
 	"strings"
 	"testing"
+
+	"tpwfc/pkg/metadata"
 )
 
 func TestFormatMarkdown(t *testing.T) {
@@ -102,12 +104,14 @@ Text after table.
 			got, err := FormatMarkdown(strings.TrimSpace(tt.input))
 			if err != nil {
 				t.Errorf("FormatMarkdown() error = %v", err)
-
 				return
 			}
 
-			if strings.TrimSpace(got) != strings.TrimSpace(tt.expected) {
-				t.Errorf("FormatMarkdown() = \n%v\nwant \n%v", got, tt.expected)
+			// Extract metadata to compare content only
+			_, cleanGot := metadata.Extract(got)
+
+			if strings.TrimSpace(cleanGot) != strings.TrimSpace(tt.expected) {
+				t.Errorf("FormatMarkdown() = \n%v\nwant \n%v", cleanGot, tt.expected)
 			}
 		})
 	}

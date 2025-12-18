@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"tpwfc/internal/config"
-	"tpwfc/pkg/metadata"
 )
 
 // Validation errors.
@@ -113,6 +112,7 @@ func (v *MarkdownValidator) ValidateMarkdown(markdown string) *ValidationResult 
 	// Find table rows (skip headers and separators)
 	tableStarted := false
 	rowNumber := 0
+	var colMap map[string]int
 
 	for lineNum, line := range lines {
 		line = strings.TrimSpace(line)
@@ -124,27 +124,56 @@ func (v *MarkdownValidator) ValidateMarkdown(markdown string) *ValidationResult 
 		}
 
 		// Skip markdown table separators
-		if strings.HasPrefix(line, "|") && strings.Contains(line, "---") {
+		if strings.HasPrefix(line, "|") && (strings.Contains(line, "---") || strings.Contains(line, ":---")) {
 			continue
 		}
 
-		// Check for Table Headers explicitly
+		// Check for Table Rows
 		if strings.HasPrefix(line, "|") {
-			// Check if this is the Timeline Table header
-			// Only check if we are NOT currently in a table, to prevent false positives from row content
-			if !tableStarted {
-				upperLine := strings.ToUpper(line)
-				if strings.Contains(upperLine, "時間") || strings.Contains(upperLine, "TIME") || strings.Contains(upperLine, "DATE") || strings.Contains(upperLine, "日期") || strings.Contains(upperLine, "时间") {
-					// Only enable validation for the TIMELINE table
-					// We assume other tables (KEY/VALUE) don't have these specific headers in this combination
+			// Split and clean cells
+			cells := strings.Split(line, "|")
+			var cleanCells []string
+			cleanCells = append(cleanCells, cells...)
+			if len(cleanCells) > 0 && strings.TrimSpace(cleanCells[0]) == "" {
+				cleanCells = cleanCells[1:]
+			}
+			if len(cleanCells) > 0 && strings.TrimSpace(cleanCells[len(cleanCells)-1]) == "" {
+				cleanCells = cleanCells[:len(cleanCells)-1]
+			}
+
+			// Check if this is a header row (Timeline table specific)
+			upperLine := strings.ToUpper(line)
+			isTimelineHeader := false
+			if strings.Contains(upperLine, "DATE") || strings.Contains(upperLine, "日期") {
+				if strings.Contains(upperLine, "TIME") || strings.Contains(upperLine, "時間") || strings.Contains(upperLine, "时间") {
 					if strings.Contains(upperLine, "EVENT") || strings.Contains(upperLine, "事件") {
-						tableStarted = true
-						continue
+						isTimelineHeader = true
 					}
 				}
 			}
 
-			// If we are in a table but it's not the timeline table (e.g. KEY|VALUE), tableStarted should be false from the loop reset or not set yet
+			if isTimelineHeader {
+				tableStarted = true
+				colMap = make(map[string]int)
+				for idx, cell := range cleanCells {
+					// Import NormalizeHeader from parsers if possible, but cyclic dependency might prevent it.
+					// We'll reimplement simple normalization or just string matching here since this is a validator.
+					// Ideally we should move NormalizeHeader to a shared package, but for now we'll duplicate simple logic.
+					h := strings.ToUpper(strings.TrimSpace(cell))
+					if strings.Contains(h, "DATE") || strings.Contains(h, "日期") {
+						colMap["DATE"] = idx
+					} else if strings.Contains(h, "TIME") || strings.Contains(h, "時間") || strings.Contains(h, "时间") {
+						colMap["TIME"] = idx
+					} else if strings.Contains(h, "EVENT") || strings.Contains(h, "事件") || strings.Contains(h, "DESCRIPTION") {
+						colMap["EVENT"] = idx
+					} else if strings.Contains(h, "END") {
+						colMap["END"] = idx
+					}
+				}
+				continue
+			}
+
+			// If we are in a table but it's not the timeline table (e.g. KEY|VALUE), skip validation or implement generic validation
 			if !tableStarted {
 				continue
 			}
@@ -153,7 +182,7 @@ func (v *MarkdownValidator) ValidateMarkdown(markdown string) *ValidationResult 
 			rowNumber++
 			result.Stats.TotalRows++
 
-			rowError := v.validateRow(line, lineNum+1, rowNumber)
+			rowError := v.validateRow(cleanCells, lineNum+1, colMap)
 			if len(rowError) > 0 {
 				result.IsValid = false
 				result.Stats.InvalidRows++
@@ -164,6 +193,7 @@ func (v *MarkdownValidator) ValidateMarkdown(markdown string) *ValidationResult 
 		} else {
 			// Not a table line
 			tableStarted = false
+			colMap = nil
 		}
 	}
 
@@ -192,127 +222,108 @@ func (v *MarkdownValidator) ValidateMarkdown(markdown string) *ValidationResult 
 	return result
 }
 
-// ValidateIntegrity checks the integrity of the markdown content using the metadata block.
-func (v *MarkdownValidator) ValidateIntegrity(content string) *ValidationResult {
-	result := &ValidationResult{
-		IsValid: true,
-		Stats:   ValidationStats{},
-	}
-
-	valid, err := metadata.Verify(content)
-	if !valid {
-		result.IsValid = false
-		result.Errors = append(result.Errors, ValidationError{
-			Message: fmt.Sprintf("integrity check failed: %v", err),
-		})
-	}
-
-	return result
-}
-
 // validateRow validates a single table row.
-func (v *MarkdownValidator) validateRow(row string, lineNum int, rowNum int) []ValidationError {
+func (v *MarkdownValidator) validateRow(values []string, lineNum int, colMap map[string]int) []ValidationError {
 	var errs []ValidationError
 
-	// Split row by pipes
-	cells := strings.Split(row, "|")
+	// Expect: DATE | TIME | DESCRIPTION at minimum
+	// If we have a colMap, we check for those indices.
+	// If no colMap (shouldn't happen if logic above is correct), fall back or error.
 
-	// Remove leading/trailing empty cells
-	var values []string
-	for i := 1; i < len(cells)-1; i++ {
-		values = append(values, strings.TrimSpace(cells[i]))
-	}
-
-	// Expect: DATE | TIME | DESCRIPTION | ...
-	if len(values) < 3 {
-		errs = append(errs, ValidationError{
-			Line:    lineNum,
-			Column:  1,
-			Message: fmt.Sprintf("expected at least 3 columns (Date, Time, Event), got %d", len(values)),
-		})
-
-		return errs
+	getCell := func(key string) (string, bool) {
+		if idx, ok := colMap[key]; ok && idx < len(values) {
+			return strings.TrimSpace(values[idx]), true
+		}
+		return "", false
 	}
 
 	// 1. Validate DATE (YYYY-MM-DD)
-	dateVal := values[0]
+	dateVal, hasDate := getCell("DATE")
 	dateRegex := regexp.MustCompile(`^\d{4}-\d{2}-\d{2}$`)
 
-	if dateVal == "" {
+	if hasDate {
+		if dateVal == "" {
+			errs = append(errs, ValidationError{
+				Line:    lineNum,
+				Column:  colMap["DATE"] + 1,
+				Field:   "date",
+				Message: "date field is empty",
+			})
+		} else if !dateRegex.MatchString(dateVal) {
+			errs = append(errs, ValidationError{
+				Line:    lineNum,
+				Column:  colMap["DATE"] + 1,
+				Field:   "date",
+				Value:   dateVal,
+				Pattern: "YYYY-MM-DD",
+				Message: fmt.Sprintf("date '%s' invalid format", dateVal),
+			})
+		}
+	} else {
+		// Only report missing date if we expected a date column but didn't find it in the map?
+		// Actually if the header didn't have DATE, maybe we shouldn't fail row validation?
+		// But for Timeline, DATE is mandatory.
 		errs = append(errs, ValidationError{
 			Line:    lineNum,
-			Column:  1,
-			Field:   "date",
-			Message: "date field is empty",
-		})
-	} else if !dateRegex.MatchString(dateVal) {
-		errs = append(errs, ValidationError{
-			Line:    lineNum,
-			Column:  1,
-			Field:   "date",
-			Value:   dateVal,
-			Pattern: "YYYY-MM-DD",
-			Message: fmt.Sprintf("date '%s' invalid format", dateVal),
+			Message: "missing DATE column",
 		})
 	}
 
 	// 2. Validate TIME
-	timeVal := values[1]
-	if timeVal == "" {
-		errs = append(errs, ValidationError{
-			Line:    lineNum,
-			Column:  2,
-			Field:   "time",
-			Message: "time field is empty",
-		})
-	} else if v.timePattern != nil && !v.timePattern.MatchString(timeVal) {
-		// Allow special time values
-		if timeVal != "TIME_ALL_DAY" && timeVal != "TIME_ONGOING" {
+	timeVal, hasTime := getCell("TIME")
+	if hasTime {
+		if timeVal == "" {
 			errs = append(errs, ValidationError{
 				Line:    lineNum,
-				Column:  2,
+				Column:  colMap["TIME"] + 1,
 				Field:   "time",
-				Value:   timeVal,
-				Pattern: v.cfg.Crawler.Validation.Patterns.Time,
-				Message: fmt.Sprintf("time '%s' does not match pattern", timeVal),
+				Message: "time field is empty",
+			})
+		} else if v.timePattern != nil && !v.timePattern.MatchString(timeVal) {
+			// Allow special time values
+			if timeVal != "TIME_ALL_DAY" && timeVal != "TIME_ONGOING" {
+				errs = append(errs, ValidationError{
+					Line:    lineNum,
+					Column:  colMap["TIME"] + 1,
+					Field:   "time",
+					Value:   timeVal,
+					Pattern: v.cfg.Crawler.Validation.Patterns.Time,
+					Message: fmt.Sprintf("time '%s' does not match pattern", timeVal),
+				})
+			}
+		}
+	} else {
+		errs = append(errs, ValidationError{
+			Line:    lineNum,
+			Message: "missing TIME column",
+		})
+	}
+
+	// 3. Validate DESCRIPTION/EVENT
+	descVal, hasDesc := getCell("EVENT")
+	if hasDesc {
+		if descVal == "" {
+			errs = append(errs, ValidationError{
+				Line:    lineNum,
+				Column:  colMap["EVENT"] + 1,
+				Field:   "description",
+				Message: "description/event field is empty",
+			})
+		} else if v.descriptionPattern != nil && !v.descriptionPattern.MatchString(descVal) {
+			errs = append(errs, ValidationError{
+				Line:    lineNum,
+				Column:  colMap["EVENT"] + 1,
+				Field:   "description",
+				Value:   truncate(descVal, 50),
+				Pattern: v.cfg.Crawler.Validation.Patterns.Description,
+				Message: "description does not match pattern",
 			})
 		}
 	}
 
-	// 3. Validate DESCRIPTION/EVENT
-	descVal := values[2]
-	if descVal == "" {
-		errs = append(errs, ValidationError{
-			Line:    lineNum,
-			Column:  3,
-			Field:   "description",
-			Message: "description/event field is empty",
-		})
-	} else if v.descriptionPattern != nil && !v.descriptionPattern.MatchString(descVal) {
-		errs = append(errs, ValidationError{
-			Line:    lineNum,
-			Column:  3,
-			Field:   "description",
-			Value:   truncate(descVal, 50),
-			Pattern: v.cfg.Crawler.Validation.Patterns.Description,
-			Message: "description does not match pattern",
-		})
-	}
-
-	// Validate casualties if required (check remaining columns for keywords)
-	remaining := strings.Join(values[3:], " ")
-	if v.cfg.Crawler.Validation.ValidateCasualties && v.casualtiesPattern != nil {
-		if strings.Contains(remaining, "死") || strings.Contains(remaining, "傷") || strings.Contains(remaining, "失蹤") {
-			// Check casualties pattern - currently simplified logic
-			// TODO: Add validation error if pattern doesn't match
-			_ = v.casualtiesPattern.MatchString(remaining)
-		}
-	}
-
-	// 4. Validate END column (if present, usually index 8)
-	// DATE | TIME | EVENT | CATEGORY | STATUS_NOTE | SOURCE | VIDEO | PHOTO | END
-	if len(values) > 8 {
-		endVal := strings.TrimSpace(values[8])
+	// 4. Validate END column (if present)
+	if idx, ok := colMap["END"]; ok && idx < len(values) {
+		endVal := strings.TrimSpace(values[idx])
 		if endVal != "" {
 			validEnd := false
 			validEnds := []string{"x", "X", "true", "TRUE"}
@@ -325,7 +336,7 @@ func (v *MarkdownValidator) validateRow(row string, lineNum int, rowNum int) []V
 			if !validEnd {
 				errs = append(errs, ValidationError{
 					Line:    lineNum,
-					Column:  9,
+					Column:  idx + 1,
 					Field:   "end",
 					Value:   endVal,
 					Message: "invalid END column value (expected 'x' or empty)",
