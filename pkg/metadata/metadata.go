@@ -108,7 +108,7 @@ func Sign(content string, validated bool) string {
 	}
 
 	// Construct new block
-	newBlock := fmt.Sprintf("\n\n%s\nVALIDATION: %s\nLAST_MODIFY: %s\nHASH: %s\n%s",
+	newBlock := fmt.Sprintf("\n\n%s\nVALIDATION: %s\nLAST_MODIFY: %s\nHASH: %s\n%s\n",
 		TagStart, valStr, now, hash, TagEnd)
 
 	return clean + newBlock

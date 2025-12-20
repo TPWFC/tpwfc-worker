@@ -373,7 +373,7 @@ func (v *MarkdownValidator) ValidateSingleRow(time, date, description string) er
 
 // Lint checks the markdown formatting using deno fmt --check.
 func (v *MarkdownValidator) Lint(filePath string) error {
-	cmd := exec.Command("deno", "fmt", "--check", filePath)
+	cmd := exec.Command("deno", "fmt", "--check", "--line-width=100", "--indent-width=2", filePath)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
