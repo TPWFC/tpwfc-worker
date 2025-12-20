@@ -2,8 +2,10 @@
 package validator
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"os/exec"
 	"regexp"
 	"strings"
 
@@ -17,6 +19,7 @@ var (
 	ErrInvalidTimeFormat   = errors.New("invalid time format")
 	ErrInvalidDateFormat   = errors.New("invalid date format")
 	ErrDescriptionPattern  = errors.New("description does not match pattern")
+	ErrLintFailed          = errors.New("markdown linting failed")
 )
 
 // ValidationError represents a validation error with context.
@@ -143,14 +146,9 @@ func (v *MarkdownValidator) ValidateMarkdown(markdown string) *ValidationResult 
 
 			// Check if this is a header row (Timeline table specific)
 			upperLine := strings.ToUpper(line)
-			isTimelineHeader := false
-			if strings.Contains(upperLine, "DATE") || strings.Contains(upperLine, "日期") {
-				if strings.Contains(upperLine, "TIME") || strings.Contains(upperLine, "時間") || strings.Contains(upperLine, "时间") {
-					if strings.Contains(upperLine, "EVENT") || strings.Contains(upperLine, "事件") {
-						isTimelineHeader = true
-					}
-				}
-			}
+			isTimelineHeader := strings.Contains(upperLine, "DATE") &&
+				strings.Contains(upperLine, "TIME") &&
+				strings.Contains(upperLine, "EVENT")
 
 			if isTimelineHeader {
 				tableStarted = true
@@ -160,11 +158,11 @@ func (v *MarkdownValidator) ValidateMarkdown(markdown string) *ValidationResult 
 					// We'll reimplement simple normalization or just string matching here since this is a validator.
 					// Ideally we should move NormalizeHeader to a shared package, but for now we'll duplicate simple logic.
 					h := strings.ToUpper(strings.TrimSpace(cell))
-					if strings.Contains(h, "DATE") || strings.Contains(h, "日期") {
+					if strings.Contains(h, "DATE") {
 						colMap["DATE"] = idx
-					} else if strings.Contains(h, "TIME") || strings.Contains(h, "時間") || strings.Contains(h, "时间") {
+					} else if strings.Contains(h, "TIME") {
 						colMap["TIME"] = idx
-					} else if strings.Contains(h, "EVENT") || strings.Contains(h, "事件") || strings.Contains(h, "DESCRIPTION") {
+					} else if strings.Contains(h, "EVENT") || strings.Contains(h, "DESCRIPTION") {
 						colMap["EVENT"] = idx
 					} else if strings.Contains(h, "END") {
 						colMap["END"] = idx
@@ -368,6 +366,26 @@ func (v *MarkdownValidator) ValidateSingleRow(time, date, description string) er
 
 	if v.descriptionPattern != nil && !v.descriptionPattern.MatchString(description) {
 		return ErrDescriptionPattern
+	}
+
+	return nil
+}
+
+// Lint checks the markdown formatting using deno fmt --check.
+func (v *MarkdownValidator) Lint(filePath string) error {
+	cmd := exec.Command("deno", "fmt", "--check", filePath)
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		// Deno fmt --check returns non-zero exit code if formatting issues are found
+		combinedOutput := stderr.String()
+		if combinedOutput == "" {
+			combinedOutput = stdout.String()
+		}
+		return fmt.Errorf("%w:\n%s", ErrLintFailed, combinedOutput)
 	}
 
 	return nil

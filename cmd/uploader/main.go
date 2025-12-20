@@ -19,10 +19,6 @@ func main() {
 	email := flag.String("email", os.Getenv("ADMIN_EMAIL"), "Admin email for authentication")
 	password := flag.String("password", os.Getenv("ADMIN_PASSWORD"), "Admin password for authentication")
 
-	// Standard mode flags
-	fireID := flag.String("fire-id", "main", "Fire incident ID (string) for standard upload")
-	fireName := flag.String("fire-name", "Wang Fuk Court Fire", "Fire incident name")
-
 	// Detailed mode flags
 	incidentIDInt := flag.Int("incident-id", 0, "Fire incident ID (integer) for detailed upload")
 
@@ -61,11 +57,11 @@ func main() {
 	if *mode == "detailed" {
 		handleDetailedUpload(uploader, log, *inputFile, *incidentIDInt, *language)
 	} else {
-		handleStandardUpload(uploader, log, *inputFile, *fireID, *fireName, *language)
+		handleStandardUpload(uploader, log, *inputFile, *language)
 	}
 }
 
-func handleStandardUpload(uploader *payload.Uploader, log *logger.Logger, inputFile, fireID, fireName, language string) {
+func handleStandardUpload(uploader *payload.Uploader, log *logger.Logger, inputFile, language string) {
 	// Load timeline data
 	data, err := payload.LoadTimelineJSON(inputFile)
 	if err != nil {
@@ -75,15 +71,22 @@ func handleStandardUpload(uploader *payload.Uploader, log *logger.Logger, inputF
 
 	log.Info(fmt.Sprintf("Loaded timeline data: events=%d", len(data.Events)))
 
-	// Use IncidentID from JSON if available and flag is default
-	if data.BasicInfo.IncidentID != "" {
-		if fireID == "main" {
-			log.Info(fmt.Sprintf("ℹ️  Using Incident ID from JSON: %s (overriding default 'main')", data.BasicInfo.IncidentID))
-			fireID = data.BasicInfo.IncidentID
-		}
+	// Validate required fields from JSON
+	if data.BasicInfo.IncidentID == "" {
+		log.Error("Error: basicInfo.incidentId is required in timeline JSON")
+		os.Exit(1)
+	}
+	if data.BasicInfo.IncidentName == "" {
+		log.Error("Error: basicInfo.incidentName is required in timeline JSON")
+		os.Exit(1)
 	}
 
-	result, err := uploader.Upload(data, fireID, fireName, language)
+	log.Info(fmt.Sprintf("Using incident from JSON: id=%s, name=%s", data.BasicInfo.IncidentID, data.BasicInfo.IncidentName))
+	if data.BasicInfo.Map.Name != "" {
+		log.Info(fmt.Sprintf("Map info: name=%s, url=%s", data.BasicInfo.Map.Name, data.BasicInfo.Map.URL))
+	}
+
+	result, err := uploader.Upload(data, language)
 	if err != nil {
 		log.Error(fmt.Sprintf("Upload failed: %v", err))
 		os.Exit(1)

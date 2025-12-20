@@ -28,6 +28,9 @@ run-worker:
 run-uploader:
 	./bin/uploader --input $(INPUT) --endpoint $(ENDPOINT)
 
+run-sign:
+	./bin/signer -input $(INPUT)
+
 run-formatter:
 	./bin/formatter -path $(PATH)
 

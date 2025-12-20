@@ -25,8 +25,6 @@ func main() {
 	password := flag.String("password", os.Getenv("ADMIN_PASSWORD"), "Admin password for authentication")
 
 	// Metadata overrides
-	fireID := flag.String("fire-id", "main", "Fire incident ID (default: main, can be overridden by doc)")
-	fireName := flag.String("fire-name", "Wang Fuk Court Fire", "Fire incident name (default)")
 	language := flag.String("language", "zh-hk", "Language code (zh-hk, zh-cn, en)")
 
 	flag.Parse()
@@ -43,7 +41,7 @@ func main() {
 
 	log.Info("🚀 Starting TPWFC Worker Pipeline")
 	log.Info(fmt.Sprintf("📍 Source: %s", *crawlerURL))
-	log.Info(fmt.Sprintf("🎯 Target: %s (FireID: %s)", *payloadURL, *fireID))
+	log.Info(fmt.Sprintf("🎯 Target: %s", *payloadURL))
 
 	// 2. Ingestion (Crawler)
 	// ----------------------
@@ -75,18 +73,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Check for Incident ID in document to override flag
-	targetFireID := *fireID
-	if doc.BasicInfo.IncidentID != "" {
-		log.Info(fmt.Sprintf("ℹ️  Found Incident ID in document: %s (overriding '%s')", doc.BasicInfo.IncidentID, targetFireID))
-		targetFireID = doc.BasicInfo.IncidentID
+	// Check for Incident ID in document
+	if doc.BasicInfo.IncidentID == "" {
+		log.Error("❌ No Incident ID found in document (basicInfo.incidentId required)")
+		os.Exit(1)
 	}
+	log.Info(fmt.Sprintf("ℹ️  Incident ID: %s", doc.BasicInfo.IncidentID))
 
 	// Check for Incident Name in document
-	targetFireName := *fireName
-	if doc.BasicInfo.IncidentName != "" {
-		targetFireName = doc.BasicInfo.IncidentName
+	if doc.BasicInfo.IncidentName == "" {
+		log.Warn("⚠️  No Incident Name found in document, using incidentId as fallback")
 	}
+	log.Info(fmt.Sprintf("ℹ️  Incident Name: %s", doc.BasicInfo.IncidentName))
 
 	// Normalization using Processor
 	processor := normalizer.NewProcessor()
@@ -123,7 +121,7 @@ func main() {
 	}
 
 	// Upload
-	result, err := uploader.Upload(timeline, targetFireID, targetFireName, *language)
+	result, err := uploader.Upload(timeline, *language)
 	if err != nil {
 		log.Error(fmt.Sprintf("❌ Upload failed: %v", err))
 		os.Exit(1)
@@ -135,7 +133,7 @@ func main() {
 	fmt.Println("\n------------------------------------------------")
 	fmt.Printf("📊 Summary Report\n")
 	fmt.Println("------------------------------------------------")
-	fmt.Printf("Incident ID: %d (%s)\n", result.IncidentID, targetFireID)
+	fmt.Printf("Incident ID: %d (%s)\n", result.IncidentID, doc.BasicInfo.IncidentID)
 	fmt.Printf("Events Created: %d\n", result.EventsCreated)
 	fmt.Printf("Events Updated: %d\n", result.EventsUpdated)
 	fmt.Printf("Total Duration: %v\n", time.Since(startTime))
