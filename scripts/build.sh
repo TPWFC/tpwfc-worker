@@ -26,5 +26,9 @@ go build -o bin/uploader ./cmd/uploader
 echo "Building formatter..."
 go build -o bin/formatter ./cmd/formatter
 
+# Build signer
+echo "Building signer..."
+go build -o bin/signer ./cmd/signer
+
 echo "Build complete!"
 echo "Executables available in ./bin/"
