@@ -90,7 +90,12 @@ func TestUploader_Upload_Scenario(t *testing.T) {
 			StartDate:   "2025-01-01",
 		},
 		BasicInfo: models.BasicInfo{
+			IncidentID:   "test-fire-id",
 			IncidentName: "Test Fire",
+			Map: models.MapSource{
+				Name: "Test Map",
+				URL:  "https://example.com/map",
+			},
 		},
 		Events: []models.TimelineEvent{
 			{
@@ -102,7 +107,7 @@ func TestUploader_Upload_Scenario(t *testing.T) {
 	}
 
 	// 4. Run Upload
-	result, err := uploader.Upload(data, "test-fire-id", "Test Fire", "en")
+	result, err := uploader.Upload(data, "en")
 	if err != nil {
 		t.Fatalf("Upload failed: %v", err)
 	}

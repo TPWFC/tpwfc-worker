@@ -8,7 +8,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sync"
 	"time"
+
+	"tpwfc/internal/logger"
 )
 
 // GraphQL errors.
@@ -16,6 +19,7 @@ var (
 	ErrUnexpectedStatusCode = errors.New("unexpected status code")
 	ErrGraphQLError         = errors.New("graphql error")
 	ErrNoTokenReceived      = errors.New("no token received from login")
+	ErrNoData               = errors.New("no data in response")
 )
 
 // Client defines the interface for GraphQL communication.
@@ -33,6 +37,8 @@ type GraphQLClient struct {
 	endpoint   string
 	apiKey     string
 	authToken  string
+	mu         sync.RWMutex
+	logger     *logger.Logger
 }
 
 // GraphQLRequest represents a GraphQL request.
@@ -58,18 +64,23 @@ type GraphQLError struct {
 }
 
 // NewGraphQLClient creates a new GraphQL client.
-func NewGraphQLClient(endpoint, apiKey string) *GraphQLClient {
+func NewGraphQLClient(endpoint, apiKey string, log *logger.Logger) *GraphQLClient {
 	return &GraphQLClient{
 		endpoint: endpoint,
 		apiKey:   apiKey,
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second,
 		},
+		logger: log,
 	}
 }
 
 // Execute sends a GraphQL request and returns the response.
 func (c *GraphQLClient) Execute(query string, variables map[string]interface{}) (*GraphQLResponse, error) {
+	if c.logger != nil {
+		c.logger.Debug(fmt.Sprintf("Executing GraphQL query: %s...", query[:min(len(query), 50)]))
+	}
+
 	reqBody := GraphQLRequest{
 		Query:     query,
 		Variables: variables,
@@ -87,12 +98,17 @@ func (c *GraphQLClient) Execute(query string, variables map[string]interface{}) 
 
 	req.Header.Set("Content-Type", "application/json")
 
-	if c.authToken != "" {
+	c.mu.RLock()
+	token := c.authToken
+	key := c.apiKey
+	c.mu.RUnlock()
+
+	if token != "" {
 		// Use authenticated token if available
-		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.authToken))
-	} else if c.apiKey != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	} else if key != "" {
 		// Fall back to API key if no auth token
-		req.Header.Set("Authorization", c.apiKey)
+		req.Header.Set("Authorization", key)
 	}
 
 	resp, err := c.httpClient.Do(req)
@@ -114,6 +130,9 @@ func (c *GraphQLClient) Execute(query string, variables map[string]interface{}) 
 	}
 
 	if resp.StatusCode != http.StatusOK {
+		if c.logger != nil {
+			c.logger.Error(fmt.Sprintf("GraphQL request failed with status %d: %s", resp.StatusCode, string(body)))
+		}
 		return nil, fmt.Errorf("%w: %d: %s", ErrUnexpectedStatusCode, resp.StatusCode, string(body))
 	}
 
@@ -127,6 +146,18 @@ func (c *GraphQLClient) Execute(query string, variables map[string]interface{}) 
 	}
 
 	return &gqlResp, nil
+}
+
+// UnmarshalGraphQLData unmarshals the response data into the target struct.
+func UnmarshalGraphQLData[T any](resp *GraphQLResponse) (*T, error) {
+	if resp == nil || resp.Data == nil {
+		return nil, ErrNoData
+	}
+	var target T
+	if err := json.Unmarshal(resp.Data, &target); err != nil {
+		return nil, fmt.Errorf("failed to parse response data: %w", err)
+	}
+	return &target, nil
 }
 
 // CreateFireIncidentMutation creates a new fire incident.
@@ -169,6 +200,21 @@ query FindFireIncident($fireId: String!) {
       id
       fireId
       fireName
+    }
+  }
+}
+`
+
+// GetFireIncidentByIDQuery gets a fire incident by ID including map data.
+const GetFireIncidentByIDQuery = `
+query GetFireIncidentByID($id: Int!) {
+  FireIncident(id: $id) {
+    id
+    fireId
+    fireName
+    map {
+      name
+      url
     }
   }
 }
