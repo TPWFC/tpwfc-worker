@@ -120,7 +120,7 @@ func main() {
 
 	if valid {
 		fmt.Println("✍️  Signing file...")
-		signedContent := metadata.Sign(content, true)
+		signedContent := metadata.Sign(content, true, nil)
 
 		if err := os.WriteFile(*inputPath, []byte(signedContent), 0644); err != nil {
 			log.Fatalf("Error writing file: %v\n", err)

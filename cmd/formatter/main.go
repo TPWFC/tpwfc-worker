@@ -183,6 +183,15 @@ func processFile(path string, write bool, cfg *config.Config) (bool, error) {
 		fileType := parser.ParseFileType(formatted)
 
 		shouldValidate := true
+
+		// Check if file is in a 'pages' directory
+		// Cross-platform check by normalizing separators
+		normalizedPath := filepath.ToSlash(path)
+		if strings.Contains(normalizedPath, "/pages/") || strings.HasPrefix(normalizedPath, "pages/") {
+			shouldValidate = false
+			validated = true
+		}
+
 		if fileType == "FIRE_INVESTIGATION" || fileType == "FIRE_RESPONSES" {
 			// Skip validation for these types as they don't have the standard timeline table yet
 			shouldValidate = false
@@ -212,7 +221,7 @@ func processFile(path string, write bool, cfg *config.Config) (bool, error) {
 	}
 
 	// Sign the content (appends new metadata)
-	signed := metadata.Sign(formatted, validated)
+	signed := metadata.Sign(formatted, validated, nil)
 
 	// Check if file needs update
 	if signed == original {

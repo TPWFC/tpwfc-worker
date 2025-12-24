@@ -87,8 +87,13 @@ func CalculateHash(content string) string {
 }
 
 // Sign appends or updates the metadata block with a fresh hash and timestamp.
-func Sign(content string, validated bool) string {
-	oldMeta, clean := Extract(content)
+func Sign(content string, validated bool, oldMeta *Metadata) string {
+	extractedMeta, clean := Extract(content)
+
+	// Use provided oldMeta if available, otherwise use extracted one
+	if oldMeta == nil {
+		oldMeta = extractedMeta
+	}
 
 	// Calculate hash of the clean content
 	hash := CalculateHash(clean)

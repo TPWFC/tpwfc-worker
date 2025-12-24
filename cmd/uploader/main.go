@@ -26,6 +26,10 @@ func main() {
 	language := flag.String("language", "zh-hk", "Language code")
 	mode := flag.String("mode", "standard", "Upload mode: 'standard' or 'detailed'")
 
+	// Statistics flags (passed from external scripts)
+	pagesCreated := flag.Int("pages-created", -1, "Number of pages created (for stats only)")
+	pagesUpdated := flag.Int("pages-updated", 0, "Number of pages updated (for stats only)")
+
 	flag.Parse()
 
 	// Validate required flags
@@ -55,7 +59,7 @@ func main() {
 	}
 
 	if *mode == "detailed" {
-		handleDetailedUpload(uploader, log, *inputFile, *incidentIDInt, *language)
+		handleDetailedUpload(uploader, log, *inputFile, *incidentIDInt, *language, *pagesCreated, *pagesUpdated)
 	} else {
 		handleStandardUpload(uploader, log, *inputFile, *language)
 	}
@@ -105,7 +109,7 @@ func handleStandardUpload(uploader *payload.Uploader, log *logger.Logger, inputF
 		result.EventsCreated+result.EventsUpdated, result.IncidentID)
 }
 
-func handleDetailedUpload(uploader *payload.Uploader, log *logger.Logger, inputFile string, incidentID int, language string) {
+func handleDetailedUpload(uploader *payload.Uploader, log *logger.Logger, inputFile string, incidentID int, language string, pagesCreated int, pagesUpdated int) {
 	if incidentID == 0 {
 		log.Error("Error: --incident-id (integer) is required for detailed mode")
 		os.Exit(1)
@@ -141,6 +145,9 @@ func handleDetailedUpload(uploader *payload.Uploader, log *logger.Logger, inputF
 	fmt.Printf("   Phases created: %d, updated: %d\n", result.PhasesCreated, result.PhasesUpdated)
 	fmt.Printf("   Events created: %d, updated: %d\n", result.EventsCreated, result.EventsUpdated)
 	fmt.Printf("   Tracking created: %d, updated: %d\n", result.TrackingCreated, result.TrackingUpdated)
+	if pagesCreated >= 0 {
+		fmt.Printf("   Pages created: %d, updated: %d\n", pagesCreated, pagesUpdated)
+	}
 
 	if len(result.Errors) > 0 {
 		fmt.Printf("   Errors: %d\n", len(result.Errors))

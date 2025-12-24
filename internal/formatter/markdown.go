@@ -56,7 +56,7 @@ func FormatMarkdown(content string) (string, error) {
 		isValid = meta.Validation
 	}
 
-	return metadata.Sign(formattedContent, isValid), nil
+	return metadata.Sign(formattedContent, isValid, meta), nil
 }
 
 func processTable(rows []string) []string {
