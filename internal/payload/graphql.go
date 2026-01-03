@@ -3,11 +3,15 @@ package payload
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -33,12 +37,13 @@ var _ Client = (*GraphQLClient)(nil)
 
 // GraphQLClient handles GraphQL communication with Payload CMS.
 type GraphQLClient struct {
-	httpClient *http.Client
-	endpoint   string
-	apiKey     string
-	authToken  string
-	mu         sync.RWMutex
-	logger     *logger.Logger
+	httpClient    *http.Client
+	endpoint      string
+	apiKey        string
+	authToken     string
+	signingSecret string
+	mu            sync.RWMutex
+	logger        *logger.Logger
 }
 
 // GraphQLRequest represents a GraphQL request.
@@ -75,6 +80,21 @@ func NewGraphQLClient(endpoint, apiKey string, log *logger.Logger) *GraphQLClien
 	}
 }
 
+// SetSigningSecret sets the HMAC signing secret for request signatures.
+func (c *GraphQLClient) SetSigningSecret(secret string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.signingSecret = secret
+}
+
+// generateSignature creates HMAC-SHA256 signature.
+// Signs only the nonce to avoid JSON serialization differences between Go and TS.
+func generateSignature(nonce, secret string) string {
+	h := hmac.New(sha256.New, []byte(secret))
+	h.Write([]byte(nonce))
+	return hex.EncodeToString(h.Sum(nil))
+}
+
 // Execute sends a GraphQL request and returns the response.
 func (c *GraphQLClient) Execute(query string, variables map[string]interface{}) (*GraphQLResponse, error) {
 	if c.logger != nil {
@@ -101,6 +121,7 @@ func (c *GraphQLClient) Execute(query string, variables map[string]interface{}) 
 	c.mu.RLock()
 	token := c.authToken
 	key := c.apiKey
+	signingSecret := c.signingSecret
 	c.mu.RUnlock()
 
 	if token != "" {
@@ -109,6 +130,14 @@ func (c *GraphQLClient) Execute(query string, variables map[string]interface{}) 
 	} else if key != "" {
 		// Fall back to API key if no auth token
 		req.Header.Set("Authorization", key)
+	}
+
+	// Add HMAC signature if signing secret is configured
+	if signingSecret != "" {
+		nonce := strconv.FormatInt(time.Now().UnixMilli(), 10)
+		signature := generateSignature(nonce, signingSecret)
+		req.Header.Set("X-Uploader-Nonce", nonce)
+		req.Header.Set("X-Uploader-Signature", signature)
 	}
 
 	resp, err := c.httpClient.Do(req)

@@ -42,6 +42,13 @@ func NewUploader(endpoint, apiKey string, log *logger.Logger) *Uploader {
 	}
 }
 
+// SetSigningSecret sets the HMAC signing secret for request signatures.
+func (u *Uploader) SetSigningSecret(secret string) {
+	if gqlClient, ok := u.client.(*GraphQLClient); ok {
+		gqlClient.SetSigningSecret(secret)
+	}
+}
+
 // NewUploaderWithClient creates a new uploader with a custom client (useful for testing).
 func NewUploaderWithClient(client Client, log *logger.Logger) *Uploader {
 	return &Uploader{

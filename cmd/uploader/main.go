@@ -18,6 +18,7 @@ func main() {
 	apiKey := flag.String("api-key", "", "API key for authentication (optional)")
 	email := flag.String("email", os.Getenv("ADMIN_EMAIL"), "Admin email for authentication")
 	password := flag.String("password", os.Getenv("ADMIN_PASSWORD"), "Admin password for authentication")
+	signingSecret := flag.String("signing-secret", os.Getenv("SEED_SIGNING_SECRET"), "HMAC signing secret for request signatures")
 
 	// Detailed mode flags
 	incidentIDInt := flag.Int("incident-id", 0, "Fire incident ID (integer) for detailed upload")
@@ -46,6 +47,16 @@ func main() {
 
 	// Create uploader
 	uploader := payload.NewUploader(*endpoint, *apiKey, log)
+
+	// SECURITY: Signing secret is REQUIRED for the uploader
+	// Without it, requests would bypass signature validation
+	if *signingSecret == "" {
+		log.Error("SEED_SIGNING_SECRET is required for the uploader to function")
+		log.Error("Set it via --signing-secret flag or SEED_SIGNING_SECRET environment variable")
+		os.Exit(1)
+	}
+	uploader.SetSigningSecret(*signingSecret)
+	log.Info("HMAC request signing enabled")
 
 	// Authenticate
 	if *email != "" && *password != "" {
