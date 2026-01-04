@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -210,18 +209,6 @@ func runUploader(cfg Config, inputPath, language string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return err
-	}
-
-	// Parse incident ID from output (for zh-hk)
-	if strings.Contains(language, "zh-hk") {
-		outputStr := string(output)
-		if idx := strings.Index(outputStr, "incidentId="); idx >= 0 {
-			logInfo("Captured incidentId from output")
-		}
-	}
-
-	return nil
+	// Use Run() instead of CombinedOutput() since we already set Stdout/Stderr
+	return cmd.Run()
 }
