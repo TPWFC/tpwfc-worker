@@ -156,13 +156,13 @@ func waitForWeb(cfg Config) bool {
 	}
 }
 
-// waitForGraphQL verifies the GraphQL endpoint is responding with valid schema
+// waitForGraphQL verifies the GraphQL endpoint is responding with valid schema.
 func waitForGraphQL(cfg Config, client *http.Client) bool {
 	// Simple introspection query to verify schema is loaded
 	query := `{"query": "{ __typename }"}`
 
 	for i := 0; i < 5; i++ {
-		req, err := http.NewRequest("POST", cfg.GraphQLEndpoint, strings.NewReader(query))
+		req, err := http.NewRequest(http.MethodPost, cfg.GraphQLEndpoint, strings.NewReader(query))
 		if err != nil {
 			continue
 		}
@@ -175,10 +175,12 @@ func waitForGraphQL(cfg Config, client *http.Client) bool {
 		}
 
 		body, _ := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			logWarn(fmt.Sprintf("Failed to close response body: %v", closeErr))
+		}
 
 		// Check if we got a valid GraphQL response (not an error about missing tables)
-		if resp.StatusCode == 200 && !strings.Contains(string(body), "Failed query") {
+		if resp.StatusCode == http.StatusOK && !strings.Contains(string(body), "Failed query") {
 			logInfo("GraphQL endpoint is ready")
 			return true
 		}
