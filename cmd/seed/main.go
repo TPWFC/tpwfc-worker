@@ -5,10 +5,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -131,9 +133,15 @@ func waitForWeb(cfg Config) bool {
 			}
 			if statusCode >= 200 && statusCode < 400 {
 				logInfo(fmt.Sprintf("Web service is ready! (HTTP %d)", statusCode))
-				// Extra time for full initialization
-				time.Sleep(5 * time.Second)
-				return true
+				// Wait for database schema initialization (Payload push: true)
+				logInfo("Waiting for database schema initialization...")
+				time.Sleep(15 * time.Second)
+
+				// Verify GraphQL is actually ready by testing introspection
+				if waitForGraphQL(cfg, client) {
+					return true
+				}
+				logWarn("GraphQL not ready after initial wait, continuing to retry...")
 			}
 		}
 
@@ -146,6 +154,40 @@ func waitForWeb(cfg Config) bool {
 		fmt.Print(".")
 		time.Sleep(2 * time.Second)
 	}
+}
+
+// waitForGraphQL verifies the GraphQL endpoint is responding with valid schema
+func waitForGraphQL(cfg Config, client *http.Client) bool {
+	// Simple introspection query to verify schema is loaded
+	query := `{"query": "{ __typename }"}`
+
+	for i := 0; i < 5; i++ {
+		req, err := http.NewRequest("POST", cfg.GraphQLEndpoint, strings.NewReader(query))
+		if err != nil {
+			continue
+		}
+		req.Header.Set("Content-Type", "application/json")
+
+		resp, err := client.Do(req)
+		if err != nil {
+			time.Sleep(2 * time.Second)
+			continue
+		}
+
+		body, _ := io.ReadAll(resp.Body)
+		resp.Body.Close()
+
+		// Check if we got a valid GraphQL response (not an error about missing tables)
+		if resp.StatusCode == 200 && !strings.Contains(string(body), "Failed query") {
+			logInfo("GraphQL endpoint is ready")
+			return true
+		}
+
+		logWarn(fmt.Sprintf("GraphQL not ready (attempt %d/5), waiting...", i+1))
+		time.Sleep(3 * time.Second)
+	}
+
+	return false
 }
 
 func runFormatter(cfg Config) {
