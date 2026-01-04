@@ -20,7 +20,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o bin/crawler ./cmd/crawler && \
     CGO_ENABLED=0 GOOS=linux go build -o bin/normalizer ./cmd/normalizer && \
     CGO_ENABLED=0 GOOS=linux go build -o bin/uploader ./cmd/uploader && \
     CGO_ENABLED=0 GOOS=linux go build -o bin/formatter ./cmd/formatter && \
-    CGO_ENABLED=0 GOOS=linux go build -o bin/signer ./cmd/signer
+    CGO_ENABLED=0 GOOS=linux go build -o bin/signer ./cmd/signer && \
+    CGO_ENABLED=0 GOOS=linux go build -o bin/seed ./cmd/seed
 
 # ============================================
 # Stage 2: Runtime Image
@@ -29,8 +30,8 @@ FROM alpine:latest
 
 WORKDIR /app
 
-# Install runtime dependencies
-RUN apk add --no-cache curl bash
+# Install runtime dependencies (curl for health checks)
+RUN apk add --no-cache curl ca-certificates
 
 # Copy binaries from builder
 COPY --from=builder /app/bin ./bin
@@ -39,11 +40,9 @@ COPY --from=builder /app/bin ./bin
 COPY configs ./configs
 COPY data ./data
 
-# Copy seed script
-COPY scripts/seed.sh ./seed.sh
-
-# Make binaries and scripts executable
-RUN chmod +x bin/* seed.sh
+# Make binaries executable
+RUN chmod +x bin/*
 
 # Default command - run seeder
-ENTRYPOINT ["./seed.sh"]
+ENTRYPOINT ["./bin/seed"]
+

@@ -14,7 +14,12 @@ import (
 func main() {
 	// Command line flags
 	inputFile := flag.String("input", "", "Path to timeline JSON file (required)")
-	endpoint := flag.String("endpoint", "http://localhost:3000/api/graphql", "GraphQL endpoint URL")
+	// Determine endpoint with fallback
+	baseURL := os.Getenv("NEXT_PUBLIC_BASE_URL")
+	if baseURL == "" {
+		baseURL = "http://localhost:3000"
+	}
+	endpoint := flag.String("endpoint", baseURL+"/api/graphql", "GraphQL endpoint URL")
 	apiKey := flag.String("api-key", "", "API key for authentication (optional)")
 	email := flag.String("email", os.Getenv("ADMIN_EMAIL"), "Admin email for authentication")
 	password := flag.String("password", os.Getenv("ADMIN_PASSWORD"), "Admin password for authentication")

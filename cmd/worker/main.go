@@ -19,8 +19,8 @@ func main() {
 	// 1. Define Command-Line Flags
 	// ---------------------------
 	crawlerURL := flag.String("crawler-url", "", "Target Markdown URL to crawl")
-	payloadURL := flag.String("payload-url", "http://localhost:3000/api/graphql", "Payload CMS GraphQL endpoint")
-	apiKey := flag.String("api-key", "", "API key for authentication (optional)")
+	payloadURL := flag.String("payload-url", os.Getenv("NEXT_PUBLIC_BASE_URL")+"/api/graphql", "Payload CMS GraphQL endpoint")
+	apiKey := flag.String("api-key", os.Getenv("SEED_SIGNING_SECRET"), "API key for authentication (required)")
 	email := flag.String("email", os.Getenv("ADMIN_EMAIL"), "Admin email for authentication")
 	password := flag.String("password", os.Getenv("ADMIN_PASSWORD"), "Admin password for authentication")
 
